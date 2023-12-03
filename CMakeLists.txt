@@ -13,7 +13,10 @@ set(SFML_STATIC_LIBRARIES TRUE)
 # Находим и импортируем библиотеки
 find_package(SFML COMPONENTS graphics REQUIRED)
 
-add_executable(Game WIN32 main.cpp)
+add_executable(Game WIN32 main.cpp gameView.cpp gameLogic.cpp)
+
+# Добавление заголовочных файлов
+target_include_directories(Game PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Линкуем наш экзешник с sfml-graphics
 target_link_libraries(Game sfml-graphics)
