@@ -1,5 +1,7 @@
 #include "gameView.hpp"
 
+using namespace sf;
+
 #define CELL_SIZE 100
 #define BORDER_SIZE 4
 
@@ -41,8 +43,23 @@ void drawEntity(sf::RenderWindow &window, Entity &entity, sf::Sprite &sprite)
     int curr_x = entity.getX();
     int curr_y = entity.getY();
     int curr_health = entity.getHealth();
+    int curr_max_health = entity.getMaxHealth();
+    int draw_x = start_x + curr_x * CELL_SIZE;
+    int draw_y = start_y + curr_y * CELL_SIZE;
 
-    // sprite.setPosition(sf::Vector2f(curr_x, curr_y));
-    sprite.setPosition(start_x + curr_x * CELL_SIZE, start_y + curr_y * CELL_SIZE);
+    // TODO нормально отрисовывать финальные спрайты
+    sprite.setPosition(draw_x + 5, draw_y + 20);
     window.draw(sprite);
+
+    RectangleShape health_bar(Vector2f(CELL_SIZE * 0.8, CELL_SIZE * 0.1));
+    health_bar.setOutlineThickness(BORDER_SIZE / 2);
+    health_bar.setOutlineColor(Color::Black);
+    health_bar.setFillColor(Color(0, 0, 0, 0));
+    health_bar.setPosition(draw_x + (CELL_SIZE * 0.1 - BORDER_SIZE / 2), draw_y + 10);
+    RectangleShape healt_bar_inner(Vector2f(
+        CELL_SIZE * 0.8 * curr_health / curr_max_health, CELL_SIZE * 0.1));
+    healt_bar_inner.setFillColor(Color::Red);
+    healt_bar_inner.setPosition(draw_x + (CELL_SIZE * 0.1 - BORDER_SIZE / 2), draw_y + 10);
+    window.draw(health_bar);
+    window.draw(healt_bar_inner);
 }

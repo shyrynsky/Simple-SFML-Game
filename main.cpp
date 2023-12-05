@@ -6,6 +6,8 @@
 #include "gameView.hpp"
 #include "gameLogic.hpp"
 
+using namespace sf;
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Game", sf::Style::Close);

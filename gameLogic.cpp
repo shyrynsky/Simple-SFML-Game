@@ -1,10 +1,11 @@
 #include "gameLogic.hpp"
 
-Entity::Entity(int a_x, int a_y, int a_helth)
+Entity::Entity(int a_x, int a_y, int a_max_helth)
 {
     x = a_x;
     y = a_y;
-    health = a_helth;
+    max_health = a_max_helth;
+    health = a_max_helth;
 }
 
 int Entity::getX()
@@ -22,7 +23,12 @@ int Entity::getHealth()
     return health;
 }
 
-Player::Player(int a_x, int a_y, int a_helth) : Entity(a_x, a_y, a_helth) {}
+int Entity::getMaxHealth()
+{
+    return max_health;
+}
+
+Player::Player(int a_x, int a_y, int a_max_helth) : Entity(a_x, a_y, a_max_helth) {}
 
 void Player::move(CellMtrx cell_mtrx, Direction direction)
 {
