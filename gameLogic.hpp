@@ -1,6 +1,8 @@
 #pragma once
+#include <string>
 
 #define ROOM_SIZE 9
+#define INVENTORY_SIZE 6
 
 enum CellType
 {
@@ -43,6 +45,37 @@ private:
 public:
     Player(int a_x, int a_y, int a_max_helth);
     void move(CellMtrx cell_mtrx, Direction direction);
+};
+
+struct Item
+{
+    int id;
+    std::string name;
+    enum Type
+    {
+        tUndef,
+        tWeapon,
+        tPotion
+    } type;
+    union Prop
+    {
+        int damage;
+        int healt;
+    } prop;
+};
+
+class Inventory
+{
+private:
+    Item items[INVENTORY_SIZE];
+    int active_item;
+
+public:
+    Inventory();
+
+    Item *getItems();
+    int getActiveItem();
+    void changeActiveItem(int number);
 };
 
 void generateEmptyRoom(CellMtrx cell_mtrx);

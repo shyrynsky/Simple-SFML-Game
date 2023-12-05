@@ -5,7 +5,7 @@ using namespace sf;
 #define CELL_SIZE 100
 #define BORDER_SIZE 4
 
-const int start_x = (1920 - (CELL_SIZE * (ROOM_SIZE + 2))) / 2;
+const int start_x = (1920 - (CELL_SIZE * ROOM_SIZE)) / 2;
 const int start_y = CELL_SIZE / 2;
 
 void drawRoom(sf::RenderWindow &window, CellMtrx cell_mtrx)
@@ -62,4 +62,40 @@ void drawEntity(sf::RenderWindow &window, Entity &entity, sf::Sprite &sprite)
     healt_bar_inner.setPosition(draw_x + (CELL_SIZE * 0.1 - BORDER_SIZE / 2), draw_y + 10);
     window.draw(health_bar);
     window.draw(healt_bar_inner);
+}
+
+void drawInventory(sf::RenderWindow &window, sf::Font &font, Inventory &inventory, std::vector<sf::Sprite> &item_sprites)
+{
+    int active_item = inventory.getActiveItem();
+    RectangleShape container(Vector2f(CELL_SIZE * 1.5 - BORDER_SIZE, CELL_SIZE * 1.5 - BORDER_SIZE));
+    container.setOutlineThickness(BORDER_SIZE);
+    container.setOutlineColor(Color::Black);
+    container.setFillColor(Color(238, 182, 87));
+
+    RectangleShape active_outline(Vector2f(CELL_SIZE * 1.5 - 5 * BORDER_SIZE, CELL_SIZE * 1.5 - 5 * BORDER_SIZE));
+    active_outline.setOutlineThickness(BORDER_SIZE * 2);
+    active_outline.setOutlineColor(Color::Red);
+    active_outline.setFillColor(Color(0, 0, 0, 20));
+
+    Text text;
+    text.setFont(font);
+    text.setFillColor(Color::Black);
+    text.setCharacterSize(20);
+
+    for (int i = 0; i < INVENTORY_SIZE; i++)
+    {
+        container.setPosition(50, i * CELL_SIZE * 1.5 + start_y);
+
+        char n = '1' + i;
+        text.setString(n);
+        text.setPosition(50 + 20, i * CELL_SIZE * 1.5 + start_y + 20);
+
+        window.draw(container);
+        window.draw(text);
+        if (i == active_item - 1)
+        {
+            active_outline.setPosition(50 + 2 * BORDER_SIZE, i * CELL_SIZE * 1.5 + start_y + 2 * BORDER_SIZE);
+            window.draw(active_outline);
+        }
+    }
 }

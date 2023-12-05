@@ -61,6 +61,34 @@ void Player::move(CellMtrx cell_mtrx, Direction direction)
     }
 }
 
+Inventory::Inventory()
+{
+    Item empty_item;
+    empty_item.id = -1;
+    empty_item.name = "";
+    empty_item.type = Item::Type::tUndef;
+    for (int i = 0; i < INVENTORY_SIZE; i++)
+    {
+        items[i] = empty_item;
+    }
+    active_item = 1;
+}
+
+Item *Inventory::getItems()
+{
+    return items;
+}
+
+int Inventory::getActiveItem()
+{
+    return active_item;
+}
+
+void Inventory::changeActiveItem(int number)
+{
+    active_item = number;
+}
+
 void generateEmptyRoom(CellMtrx cell_mtrx)
 {
     for (int column = 0; column < ROOM_SIZE; column++)

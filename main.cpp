@@ -14,6 +14,8 @@ int main()
     window.setFramerateLimit(120);
     // srand((unsigned)time(NULL));
 
+    Font font;
+    font.loadFromFile("arial.ttf");
     sf::Image player1_img, player2_img;
     player1_img.loadFromFile("player1.png");
     player2_img.loadFromFile("player2.png");
@@ -22,10 +24,13 @@ int main()
     bool is_1st_texture = true;
     sf::Sprite player_spite;
     player_spite.setTexture(player_texture);
+    std::vector<Sprite> item_sprites;
+    //??
 
     CellMtrx cell_mtrx;
     generateEmptyRoom(cell_mtrx);
     Player player(1, 4, 100);
+    Inventory inventory;
 
     sf::Clock clock;
     while (window.isOpen())
@@ -58,14 +63,17 @@ int main()
                     player.move(cell_mtrx, dirRight);
                     break;
                 }
+                if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num6)
+                    inventory.changeActiveItem(event.key.code - sf::Keyboard::Num0);
                 break;
             }
         }
 
-        window.clear();
+        window.clear(Color(195, 192, 188));
 
         drawRoom(window, cell_mtrx);
         drawEntity(window, player, player_spite);
+        drawInventory(window, font, inventory, item_sprites);
 
         window.display();
 
