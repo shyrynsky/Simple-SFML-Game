@@ -24,19 +24,26 @@ int main()
     bool is_1st_texture = true;
     sf::Sprite player_spite;
     player_spite.setTexture(player_texture);
-    std::vector<Sprite> item_sprites;
-    //??
+
+    std::vector<Sprite> item_sprites; // TODO заполнить вектор
+    sf::Sprite curr_sprite;
+    sf::Texture sword1_texture, potion1_texture;
+    sword1_texture.loadFromFile("sword1.png");
+    potion1_texture.loadFromFile("potion1.png");
+    curr_sprite.setTexture(sword1_texture);
+    item_sprites.push_back(curr_sprite);
+    curr_sprite.setTexture(potion1_texture);
+    item_sprites.push_back(curr_sprite);
 
     CellMtrx cell_mtrx;
     generateEmptyRoom(cell_mtrx);
     Player player(1, 4, 100);
-    Inventory inventory;
 
-    sf::Clock clock;
+    sf::Clock anim_clock;
     while (window.isOpen())
     {
         sf::Event event;
-        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        // sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         while (window.pollEvent(event))
         {
             switch (event.type)
@@ -44,9 +51,8 @@ int main()
             case sf::Event::Closed:
                 window.close();
                 break;
-            case sf::Event::MouseButtonPressed:
-
-                break;
+            // case sf::Event::MouseButtonPressed:
+            //     break;
             case sf::Event::KeyPressed:
                 switch (event.key.code)
                 {
@@ -64,7 +70,7 @@ int main()
                     break;
                 }
                 if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num6)
-                    inventory.changeActiveItem(event.key.code - sf::Keyboard::Num0);
+                    player.changeActiveItem(event.key.code - sf::Keyboard::Num0);
                 break;
             }
         }
@@ -73,18 +79,18 @@ int main()
 
         drawRoom(window, cell_mtrx);
         drawEntity(window, player, player_spite);
-        drawInventory(window, font, inventory, item_sprites);
+        drawInventory(window, font, player, item_sprites);
 
         window.display();
 
-        if (clock.getElapsedTime().asMilliseconds() > 500)
+        if (anim_clock.getElapsedTime().asMilliseconds() > 500)
         {
             if (is_1st_texture)
                 player_texture.loadFromImage(player2_img);
             else
                 player_texture.loadFromImage(player1_img);
             is_1st_texture = !is_1st_texture;
-            clock.restart();
+            anim_clock.restart();
         }
     }
 

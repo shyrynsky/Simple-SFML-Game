@@ -64,9 +64,9 @@ void drawEntity(sf::RenderWindow &window, Entity &entity, sf::Sprite &sprite)
     window.draw(healt_bar_inner);
 }
 
-void drawInventory(sf::RenderWindow &window, sf::Font &font, Inventory &inventory, std::vector<sf::Sprite> &item_sprites)
+void drawInventory(sf::RenderWindow &window, sf::Font &font, Player &player, std::vector<sf::Sprite> &item_sprites)
 {
-    int active_item = inventory.getActiveItem();
+    int active_item = player.getActiveItem();
     RectangleShape container(Vector2f(CELL_SIZE * 1.5 - BORDER_SIZE, CELL_SIZE * 1.5 - BORDER_SIZE));
     container.setOutlineThickness(BORDER_SIZE);
     container.setOutlineColor(Color::Black);
@@ -96,6 +96,12 @@ void drawInventory(sf::RenderWindow &window, sf::Font &font, Inventory &inventor
         {
             active_outline.setPosition(50 + 2 * BORDER_SIZE, i * CELL_SIZE * 1.5 + start_y + 2 * BORDER_SIZE);
             window.draw(active_outline);
+        }
+        if (player.getItems()[i].type != Item::tUndef)
+        {
+            int id = player.getItems()[i].id;
+            item_sprites[id].setPosition(50 + 25, i * CELL_SIZE * 1.5 + start_y + 25); // 100px
+            window.draw(item_sprites[id]);
         }
     }
 }

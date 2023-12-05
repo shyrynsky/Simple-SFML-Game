@@ -28,7 +28,43 @@ int Entity::getMaxHealth()
     return max_health;
 }
 
-Player::Player(int a_x, int a_y, int a_max_helth) : Entity(a_x, a_y, a_max_helth) {}
+Player::Player(int a_x, int a_y, int a_max_helth) : Entity(a_x, a_y, a_max_helth)
+{
+    damage = 1;
+
+    Item empty_item;
+    empty_item.id = -1;
+    empty_item.name = "";
+    empty_item.type = Item::Type::tUndef;
+
+    items[0].id = 0;
+    items[0].name = "обычный меч";
+    items[0].type = Item::tWeapon;
+    items[0].prop.damage = 10;
+
+    items[5].id = 1;
+    items[5].name = "малое зелье здоровья";
+    items[5].type = Item::tPotion;
+    items[5].prop.health = 30;
+
+    health = max_health / 2;
+
+    for (int i = 1; i < INVENTORY_SIZE - 1; i++)
+    {
+        items[i] = empty_item;
+    }
+    changeActiveItem(1);
+}
+
+Item *Player::getItems()
+{
+    return items;
+}
+
+int Player::getActiveItem()
+{
+    return active_item;
+}
 
 void Player::move(CellMtrx cell_mtrx, Direction direction)
 {
@@ -61,32 +97,20 @@ void Player::move(CellMtrx cell_mtrx, Direction direction)
     }
 }
 
-Inventory::Inventory()
-{
-    Item empty_item;
-    empty_item.id = -1;
-    empty_item.name = "";
-    empty_item.type = Item::Type::tUndef;
-    for (int i = 0; i < INVENTORY_SIZE; i++)
-    {
-        items[i] = empty_item;
-    }
-    active_item = 1;
-}
-
-Item *Inventory::getItems()
-{
-    return items;
-}
-
-int Inventory::getActiveItem()
-{
-    return active_item;
-}
-
-void Inventory::changeActiveItem(int number)
+void Player::changeActiveItem(int number)
 {
     active_item = number;
+    if (items[number - 1].type == Item::tWeapon)
+        damage = items[number - 1].prop.damage;
+    else if (items[number - 1].type == Item::tPotion)
+    {
+        int curr_health = health + items[number - 1].prop.health;
+        health = curr_health > max_health ? max_health : curr_health;
+        items[number - 1].type = Item::tUndef; // протестить
+        damage = 1;
+    }
+    else
+        damage = 1;
 }
 
 void generateEmptyRoom(CellMtrx cell_mtrx)

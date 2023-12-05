@@ -23,6 +23,32 @@ enum Direction
 
 typedef CellType CellMtrx[ROOM_SIZE][ROOM_SIZE];
 
+struct Item
+{
+    int id;
+    std::string name;
+    enum Type
+    {
+        tUndef,
+        tWeapon,
+        tPotion
+    } type;
+    union Prop
+    {
+        int damage;
+        int health;
+    } prop;
+};
+
+// class Inventory
+// {
+// private:
+
+// public:
+//     Inventory();
+
+// };
+
 class Entity
 {
 protected:
@@ -41,41 +67,18 @@ public:
 class Player : public Entity
 {
 private:
-    // weapon
-public:
-    Player(int a_x, int a_y, int a_max_helth);
-    void move(CellMtrx cell_mtrx, Direction direction);
-};
-
-struct Item
-{
-    int id;
-    std::string name;
-    enum Type
-    {
-        tUndef,
-        tWeapon,
-        tPotion
-    } type;
-    union Prop
-    {
-        int damage;
-        int healt;
-    } prop;
-};
-
-class Inventory
-{
-private:
     Item items[INVENTORY_SIZE];
     int active_item;
+    int damage;
 
 public:
-    Inventory();
+    Player(int a_x, int a_y, int a_max_helth);
 
     Item *getItems();
     int getActiveItem();
+
     void changeActiveItem(int number);
+    void move(CellMtrx cell_mtrx, Direction direction);
 };
 
 void generateEmptyRoom(CellMtrx cell_mtrx);
