@@ -2,9 +2,9 @@
 // #include <stdlib.h>
 // #include <ctime>
 // #include <forward_list>
-// using namespace sf;
 #include "gameView.hpp"
 #include "gameLogic.hpp"
+#include "gameRes.hpp"
 
 using namespace sf;
 
@@ -14,30 +14,8 @@ int main()
     window.setFramerateLimit(120);
     // srand((unsigned)time(NULL));
 
-    Font font;
-    font.loadFromFile("arial.ttf");
-    sf::Image player1_img, player2_img, enemy1_img, enemy2_img;
-    player1_img.loadFromFile("player1.png");
-    player2_img.loadFromFile("player2.png");
-    enemy1_img.loadFromFile("enemy1.png");
-    enemy2_img.loadFromFile("enemy2.png");
-    sf::Texture player_texture, enemy_texture;
-    player_texture.loadFromImage(player1_img);
-    enemy_texture.loadFromImage(enemy1_img);
+    GameRes r;
     bool is_1st_texture = true;
-    sf::Sprite player_spite, enemy_sprite;
-    player_spite.setTexture(player_texture);
-    enemy_sprite.setTexture(enemy_texture);
-
-    std::vector<Sprite> item_sprites; // TODO заполнить вектор
-    sf::Sprite curr_sprite;
-    sf::Texture sword1_texture, potion1_texture;
-    sword1_texture.loadFromFile("sword1.png");
-    potion1_texture.loadFromFile("potion1.png");
-    curr_sprite.setTexture(sword1_texture);
-    item_sprites.push_back(curr_sprite);
-    curr_sprite.setTexture(potion1_texture);
-    item_sprites.push_back(curr_sprite);
 
     CellMtrx cell_mtrx;
     generateEmptyRoom(cell_mtrx);
@@ -45,9 +23,9 @@ int main()
     Enemy enemy(4, 4, 30, 10);
 
     sf::Clock anim_clock;
+    sf::Event event;
     while (window.isOpen())
     {
-        sf::Event event;
         // sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         while (window.pollEvent(event))
         {
@@ -83,9 +61,9 @@ int main()
         window.clear(Color(195, 192, 188));
 
         drawRoom(window, cell_mtrx);
-        drawEntity(window, player, player_spite);
-        drawEntity(window, enemy, enemy_sprite);
-        drawInventory(window, font, player, item_sprites);
+        drawEntity(window, player, r.player_spite);
+        drawEntity(window, enemy, r.enemy_sprite);
+        drawInventory(window, r.font, player, r.item_sprites);
 
         window.display();
 
@@ -93,13 +71,13 @@ int main()
         {
             if (is_1st_texture)
             {
-                player_texture.loadFromImage(player2_img);
-                enemy_texture.loadFromImage(enemy2_img);
+                r.player_texture.loadFromImage(r.player2_img);
+                r.enemy_texture.loadFromImage(r.enemy2_img);
             }
             else
             {
-                player_texture.loadFromImage(player1_img);
-                enemy_texture.loadFromImage(enemy1_img);
+                r.player_texture.loadFromImage(r.player1_img);
+                r.enemy_texture.loadFromImage(r.enemy1_img);
             }
             is_1st_texture = !is_1st_texture;
             anim_clock.restart();
