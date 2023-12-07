@@ -16,14 +16,18 @@ int main()
 
     Font font;
     font.loadFromFile("arial.ttf");
-    sf::Image player1_img, player2_img;
+    sf::Image player1_img, player2_img, enemy1_img, enemy2_img;
     player1_img.loadFromFile("player1.png");
     player2_img.loadFromFile("player2.png");
-    sf::Texture player_texture;
+    enemy1_img.loadFromFile("enemy1.png");
+    enemy2_img.loadFromFile("enemy2.png");
+    sf::Texture player_texture, enemy_texture;
     player_texture.loadFromImage(player1_img);
+    enemy_texture.loadFromImage(enemy1_img);
     bool is_1st_texture = true;
-    sf::Sprite player_spite;
+    sf::Sprite player_spite, enemy_sprite;
     player_spite.setTexture(player_texture);
+    enemy_sprite.setTexture(enemy_texture);
 
     std::vector<Sprite> item_sprites; // TODO заполнить вектор
     sf::Sprite curr_sprite;
@@ -38,6 +42,7 @@ int main()
     CellMtrx cell_mtrx;
     generateEmptyRoom(cell_mtrx);
     Player player(1, 4, 100);
+    Enemy enemy(4, 4, 30, 10);
 
     sf::Clock anim_clock;
     while (window.isOpen())
@@ -79,6 +84,7 @@ int main()
 
         drawRoom(window, cell_mtrx);
         drawEntity(window, player, player_spite);
+        drawEntity(window, enemy, enemy_sprite);
         drawInventory(window, font, player, item_sprites);
 
         window.display();
@@ -86,9 +92,15 @@ int main()
         if (anim_clock.getElapsedTime().asMilliseconds() > 500)
         {
             if (is_1st_texture)
+            {
                 player_texture.loadFromImage(player2_img);
+                enemy_texture.loadFromImage(enemy2_img);
+            }
             else
+            {
                 player_texture.loadFromImage(player1_img);
+                enemy_texture.loadFromImage(enemy1_img);
+            }
             is_1st_texture = !is_1st_texture;
             anim_clock.restart();
         }

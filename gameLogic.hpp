@@ -81,4 +81,13 @@ public:
     void move(CellMtrx cell_mtrx, Direction direction);
 };
 
+class Enemy : public Entity
+{
+private:
+    int damage;
+
+public:
+    Enemy(int a_x, int a_y, int a_max_helth, int a_damage);
+};
+
 void generateEmptyRoom(CellMtrx cell_mtrx);

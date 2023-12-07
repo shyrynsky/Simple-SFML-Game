@@ -106,11 +106,16 @@ void Player::changeActiveItem(int number)
     {
         int curr_health = health + items[number - 1].prop.health;
         health = curr_health > max_health ? max_health : curr_health;
-        items[number - 1].type = Item::tUndef; // протестить
+        items[number - 1].type = Item::tUndef;
         damage = 1;
     }
     else
         damage = 1;
+}
+
+Enemy::Enemy(int a_x, int a_y, int a_max_helth, int a_damage) : Entity(a_x, a_y, a_max_helth)
+{
+    damage = a_damage;
 }
 
 void generateEmptyRoom(CellMtrx cell_mtrx)
