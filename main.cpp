@@ -18,6 +18,7 @@ int main()
 
     CellMtrx cell_mtrx;
     generateEmptyRoom(cell_mtrx);
+    closeRoom(cell_mtrx);
     Player player(1, 4, 100);
 
     std::list<Enemy> enemy_list;
@@ -45,7 +46,7 @@ int main()
                 {
                 case sf::Keyboard::A:
                     player.move(cell_mtrx, dirLeft, enemy_list);
-                    if (player.getLastAttackDir() != dirUnknown)
+                    if (player.getLastAttackDir() != dirUnknown) // TODO еще проверку у врагов
                         fight_clock.restart();
                     Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
                     break;

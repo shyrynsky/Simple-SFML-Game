@@ -58,7 +58,7 @@ Player::Player(int a_x, int a_y, int a_max_helth) : Entity(a_x, a_y, a_max_helth
     items[5].type = Item::tPotion;
     items[5].prop.health = 30;
 
-    health = max_health / 2;
+    health = max_health;
 
     for (int i = 1; i < INVENTORY_SIZE - 1; i++)
     {
@@ -126,6 +126,8 @@ void Player::move(CellMtrx cell_mtrx, Direction direction, std::list<Enemy> &ene
                 x = next_x;
                 y = next_y;
                 enemy_list.erase(enemy_iter);
+                if (enemy_list.size() == 0)
+                    openRoom(cell_mtrx);
             }
             last_atack_dir = direction;
             return;
@@ -250,6 +252,8 @@ void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_lis
         }
         wave_stage++;
     }
+    if (is_deadend)
+        return;
     int next_x = player_x;
     int next_y = player_y;
     for (int i = wave_stage; i > ctStartSearch; i--)
@@ -341,4 +345,34 @@ void generateEmptyRoom(CellMtrx cell_mtrx)
         else
             cell_mtrx[ROOM_SIZE - 1][column] = ctCell;
     }
+}
+
+void closeRoom(CellMtrx cell_mtrx)
+{
+    if (cell_mtrx[0][ROOM_SIZE / 2] == ctCell)
+        cell_mtrx[0][ROOM_SIZE / 2] = ctDoor;
+
+    if (cell_mtrx[ROOM_SIZE - 1][ROOM_SIZE / 2] == ctCell)
+        cell_mtrx[ROOM_SIZE - 1][ROOM_SIZE / 2] = ctDoor;
+
+    if (cell_mtrx[ROOM_SIZE / 2][0] == ctCell)
+        cell_mtrx[ROOM_SIZE / 2][0] = ctDoor;
+
+    if (cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] == ctCell)
+        cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] = ctDoor;
+}
+
+void openRoom(CellMtrx cell_mtrx)
+{
+    if (cell_mtrx[0][ROOM_SIZE / 2] == ctDoor)
+        cell_mtrx[0][ROOM_SIZE / 2] = ctCell;
+
+    if (cell_mtrx[ROOM_SIZE - 1][ROOM_SIZE / 2] == ctDoor)
+        cell_mtrx[ROOM_SIZE - 1][ROOM_SIZE / 2] = ctCell;
+
+    if (cell_mtrx[ROOM_SIZE / 2][0] == ctDoor)
+        cell_mtrx[ROOM_SIZE / 2][0] = ctCell;
+
+    if (cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] == ctDoor)
+        cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] = ctCell;
 }

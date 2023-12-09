@@ -101,3 +101,5 @@ public:
 };
 
 void generateEmptyRoom(CellMtrx cell_mtrx);
+void closeRoom(CellMtrx cell_mtrx);
+void openRoom(CellMtrx cell_mtrx);

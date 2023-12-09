@@ -17,6 +17,8 @@ void drawRoom(sf::RenderWindow &window, CellMtrx cell_mtrx)
     cell.setOutlineColor(sf::Color::Black);
     sf::RectangleShape wall(sf::Vector2f(CELL_SIZE, CELL_SIZE));
     wall.setFillColor(sf::Color(105, 105, 105));
+    sf::RectangleShape door(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+    door.setFillColor(sf::Color(55, 55, 55));
     for (int row = 0; row < ROOM_SIZE; row++)
     {
         for (int column = 0; column < ROOM_SIZE; column++)
@@ -30,6 +32,10 @@ void drawRoom(sf::RenderWindow &window, CellMtrx cell_mtrx)
             case ctWall:
                 wall.setPosition(start_x + column * CELL_SIZE, start_y + row * CELL_SIZE);
                 window.draw(wall);
+                break;
+            case ctDoor:
+                door.setPosition(start_x + column * CELL_SIZE, start_y + row * CELL_SIZE);
+                window.draw(door);
                 break;
             default:
                 break;
