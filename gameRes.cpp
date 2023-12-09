@@ -25,3 +25,22 @@ GameRes::GameRes()
     curr_item_sprite.setTexture(potion1_texture); // id 1
     item_sprites.push_back(curr_item_sprite);
 }
+
+void GameRes::animateSprites(Clock &anim_clock)
+{
+    if (anim_clock.getElapsedTime().asMilliseconds() > 500)
+    {
+        if (is_1st_texture)
+        {
+            player_texture.loadFromImage(player2_img);
+            enemy_texture.loadFromImage(enemy2_img);
+        }
+        else
+        {
+            player_texture.loadFromImage(player1_img);
+            enemy_texture.loadFromImage(enemy1_img);
+        }
+        is_1st_texture = !is_1st_texture;
+        anim_clock.restart();
+    }
+}

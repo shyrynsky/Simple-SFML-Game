@@ -15,7 +15,6 @@ int main()
     // srand((unsigned)time(NULL));
 
     GameRes r;
-    bool is_1st_texture = true;
 
     CellMtrx cell_mtrx;
     generateEmptyRoom(cell_mtrx);
@@ -80,21 +79,7 @@ int main()
 
         window.display();
 
-        if (anim_clock.getElapsedTime().asMilliseconds() > 500)
-        {
-            if (is_1st_texture)
-            {
-                r.player_texture.loadFromImage(r.player2_img);
-                r.enemy_texture.loadFromImage(r.enemy2_img);
-            }
-            else
-            {
-                r.player_texture.loadFromImage(r.player1_img);
-                r.enemy_texture.loadFromImage(r.enemy1_img);
-            }
-            is_1st_texture = !is_1st_texture;
-            anim_clock.restart();
-        }
+        r.animateSprites(anim_clock);
     }
 
     return 0;
