@@ -77,11 +77,11 @@ int Player::getActiveItem()
     return active_item;
 }
 
-auto Player::isEnemy(std::list<Enemy> &enemy_list, int x, int y)
+auto Entity::isEnemy(std::list<Enemy> &enemy_list, int a_x, int a_y)
 {
     for (auto iter = enemy_list.begin(); iter != enemy_list.end(); iter++)
     {
-        if (iter->getX() == x && iter->getY() == y)
+        if (iter->getX() == a_x && iter->getY() == a_y)
         {
             return iter;
         }
@@ -164,6 +164,150 @@ Enemy::Enemy(int a_x, int a_y, int a_max_helth, int a_damage, int a_id) : Entity
 int Enemy::getId()
 {
     return id;
+}
+
+bool Enemy::IsFindedEnd(SearchMatrix path_matrix, int wave_stage, int end_x, int end_y)
+{
+    if ((end_y - 1 >= 0) && path_matrix[end_y - 1][end_x] == wave_stage)
+    {
+        return true;
+    }
+    if ((end_x - 1 >= 0) && path_matrix[end_y][end_x - 1] == wave_stage)
+    {
+        return true;
+    }
+    if ((end_y + 1 < ROOM_SIZE) && path_matrix[end_y + 1][end_x] == wave_stage)
+    {
+        return true;
+    }
+    if ((end_x + 1 < ROOM_SIZE) && path_matrix[end_y][end_x + 1] == wave_stage)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Enemy::Wave(SearchMatrix path_matrix, int a_x, int a_y, int wave_stage)
+{
+    bool result = false;
+    wave_stage++;
+    if ((a_x - 1 >= 0) && path_matrix[a_x - 1][a_y] == ctCell)
+    {
+        path_matrix[a_x - 1][a_y] = wave_stage;
+        result = true;
+    }
+    if ((a_y - 1 >= 0) && path_matrix[a_x][a_y - 1] == ctCell)
+    {
+        path_matrix[a_x][a_y - 1] = wave_stage;
+        result = true;
+    }
+    if ((a_x + 1 < ROOM_SIZE) && path_matrix[a_x + 1][a_y] == ctCell)
+    {
+        path_matrix[a_x + 1][a_y] = wave_stage;
+        result = true;
+    }
+    if ((a_y + 1 < ROOM_SIZE) && path_matrix[a_x][a_y + 1] == ctCell)
+    {
+        path_matrix[a_x][a_y + 1] = wave_stage;
+        result = true;
+    }
+    return result;
+}
+
+void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_list) // потестить бы
+{
+    int player_x = player.getX();
+    int player_y = player.getY();
+    SearchMatrix search_mtrx;
+    for (int i = 0; i < ROOM_SIZE; i++)
+    {
+        for (int j = 0; j < ROOM_SIZE; j++)
+        {
+            if (cell_mtrx[i][j] == ctCell && isEnemy(enemy_list, j, i) == enemy_list.end())
+                search_mtrx[i][j] = (int)ctCell;
+            else
+                search_mtrx[i][j] = (int)ctWall;
+        }
+    }
+    search_mtrx[y][x] = ctStartSearch;
+    search_mtrx[player_y][player_x] = ctEndSearch;
+
+    int wave_stage = ctStartSearch;
+    bool is_deadend = false;
+    while (!is_deadend && !IsFindedEnd(search_mtrx, wave_stage, player_x, player_y))
+    {
+        is_deadend = true;
+        for (int i = 0; i < ROOM_SIZE; i++)
+        {
+            for (int j = 0; j < ROOM_SIZE; j++)
+            {
+                if (search_mtrx[i][j] == wave_stage)
+                {
+                    if (Wave(search_mtrx, i, j, wave_stage))
+                        is_deadend = false;
+                }
+            }
+        }
+        wave_stage++;
+    }
+    int next_x = player_x;
+    int next_y = player_y;
+    for (int i = wave_stage; i > ctStartSearch; i--)
+    {
+        if ((next_x - 1 >= 0) && search_mtrx[next_y][next_x - 1] == i)
+        {
+            next_x -= 1;
+        }
+        if ((next_y - 1 >= 0) && search_mtrx[next_y - 1][next_x] == i)
+        {
+            next_y -= 1;
+        }
+        if ((next_x + 1 < ROOM_SIZE) && search_mtrx[next_y][next_x + 1] == i)
+        {
+            next_x += 1;
+        }
+        if ((next_y + 1 < ROOM_SIZE) && search_mtrx[next_y + 1][next_x] == i)
+        {
+            next_y += 1;
+        }
+    }
+
+    if (next_x == player_x && next_y == player_y)
+    {
+        int player_health = player.getHealth();
+        if (player_health >= damage)
+            player.setHealth(player_health - damage);
+        else
+        {
+            // конец игры
+            exit(EXIT_SUCCESS);
+        }
+        Direction direction = dirUnknown;
+        if (next_x > x)
+            direction = dirRight;
+        if (next_x < x)
+            direction = dirLeft;
+        if (next_y > y)
+            direction = dirDown;
+        if (next_y < y)
+            direction = dirUp;
+        last_atack_dir = direction;
+        return;
+    }
+    else
+    {
+        x = next_x;
+        y = next_y;
+    }
+    last_atack_dir = dirUnknown;
+}
+
+void Enemy::moveEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Entity &player)
+{
+    for (Enemy &enemy : enemy_list)
+    {
+        enemy.move(cell_mtrx, player, enemy_list);
+    }
 }
 
 void generateEmptyRoom(CellMtrx cell_mtrx)

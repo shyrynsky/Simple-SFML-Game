@@ -23,6 +23,8 @@ int main()
     std::list<Enemy> enemy_list;
     Enemy enemy(4, 4, 30, 10, 0);
     enemy_list.push_back(enemy);
+    Enemy enemy2(6, 6, 30, 10, 0);
+    enemy_list.push_back(enemy2);
 
     sf::Clock anim_clock, fight_clock;
     sf::Event event;
@@ -45,21 +47,25 @@ int main()
                     player.move(cell_mtrx, dirLeft, enemy_list);
                     if (player.getLastAttackDir() != dirUnknown)
                         fight_clock.restart();
+                    Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
                     break;
                 case sf::Keyboard::W:
                     player.move(cell_mtrx, dirUp, enemy_list);
                     if (player.getLastAttackDir() != dirUnknown)
                         fight_clock.restart();
+                    Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
                     break;
                 case sf::Keyboard::S:
                     player.move(cell_mtrx, dirDown, enemy_list);
                     if (player.getLastAttackDir() != dirUnknown)
                         fight_clock.restart();
+                    Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
                     break;
                 case sf::Keyboard::D:
                     player.move(cell_mtrx, dirRight, enemy_list);
                     if (player.getLastAttackDir() != dirUnknown)
                         fight_clock.restart();
+                    Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
                     break;
                 }
                 if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num6)
