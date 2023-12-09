@@ -20,9 +20,12 @@ int main()
     CellMtrx cell_mtrx;
     generateEmptyRoom(cell_mtrx);
     Player player(1, 4, 100);
-    Enemy enemy(4, 4, 30, 10);
 
-    sf::Clock anim_clock;
+    std::list<Enemy> enemy_list;
+    Enemy enemy(4, 4, 30, 10, 0);
+    enemy_list.push_back(enemy);
+
+    sf::Clock anim_clock, fight_clock;
     sf::Event event;
     while (window.isOpen())
     {
@@ -40,16 +43,24 @@ int main()
                 switch (event.key.code)
                 {
                 case sf::Keyboard::A:
-                    player.move(cell_mtrx, dirLeft);
+                    player.move(cell_mtrx, dirLeft, enemy_list);
+                    if (player.getLastAttackDir() != dirUnknown)
+                        fight_clock.restart();
                     break;
                 case sf::Keyboard::W:
-                    player.move(cell_mtrx, dirUp);
+                    player.move(cell_mtrx, dirUp, enemy_list);
+                    if (player.getLastAttackDir() != dirUnknown)
+                        fight_clock.restart();
                     break;
                 case sf::Keyboard::S:
-                    player.move(cell_mtrx, dirDown);
+                    player.move(cell_mtrx, dirDown, enemy_list);
+                    if (player.getLastAttackDir() != dirUnknown)
+                        fight_clock.restart();
                     break;
                 case sf::Keyboard::D:
-                    player.move(cell_mtrx, dirRight);
+                    player.move(cell_mtrx, dirRight, enemy_list);
+                    if (player.getLastAttackDir() != dirUnknown)
+                        fight_clock.restart();
                     break;
                 }
                 if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num6)
@@ -61,8 +72,10 @@ int main()
         window.clear(Color(195, 192, 188));
 
         drawRoom(window, cell_mtrx);
-        drawEntity(window, player, r.player_spite);
-        drawEntity(window, enemy, r.enemy_sprite);
+
+        drawEntity(window, player, r.player_spite, fight_clock);
+        drawEnemyList(window, enemy_list, r.enemy_sprites, fight_clock);
+
         drawInventory(window, r.font, player, r.item_sprites);
 
         window.display();

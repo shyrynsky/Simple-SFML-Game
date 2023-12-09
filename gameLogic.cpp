@@ -6,6 +6,7 @@ Entity::Entity(int a_x, int a_y, int a_max_helth)
     y = a_y;
     max_health = a_max_helth;
     health = a_max_helth;
+    last_atack_dir = dirUnknown;
 }
 
 int Entity::getX()
@@ -23,9 +24,19 @@ int Entity::getHealth()
     return health;
 }
 
+void Entity::setHealth(int a_health)
+{
+    health = a_health;
+}
+
 int Entity::getMaxHealth()
 {
     return max_health;
+}
+
+Direction Entity::getLastAttackDir()
+{
+    return last_atack_dir;
 }
 
 Player::Player(int a_x, int a_y, int a_max_helth) : Entity(a_x, a_y, a_max_helth)
@@ -66,7 +77,19 @@ int Player::getActiveItem()
     return active_item;
 }
 
-void Player::move(CellMtrx cell_mtrx, Direction direction)
+auto Player::isEnemy(std::list<Enemy> &enemy_list, int x, int y)
+{
+    for (auto iter = enemy_list.begin(); iter != enemy_list.end(); iter++)
+    {
+        if (iter->getX() == x && iter->getY() == y)
+        {
+            return iter;
+        }
+    }
+    return enemy_list.end();
+}
+
+void Player::move(CellMtrx cell_mtrx, Direction direction, std::list<Enemy> &enemy_list)
 {
     int next_x = x;
     int next_y = y;
@@ -92,9 +115,28 @@ void Player::move(CellMtrx cell_mtrx, Direction direction)
 
     if (cell_mtrx[next_y][next_x] == ctCell)
     {
-        x = next_x;
-        y = next_y;
+        auto enemy_iter = isEnemy(enemy_list, next_x, next_y);
+        if (enemy_iter != enemy_list.end())
+        {
+            int enemy_health = enemy_iter->getHealth();
+            if (enemy_health >= damage)
+                enemy_iter->setHealth(enemy_health - damage);
+            else
+            {
+                x = next_x;
+                y = next_y;
+                enemy_list.erase(enemy_iter);
+            }
+            last_atack_dir = direction;
+            return;
+        }
+        else
+        {
+            x = next_x;
+            y = next_y;
+        }
     }
+    last_atack_dir = dirUnknown;
 }
 
 void Player::changeActiveItem(int number)
@@ -113,9 +155,15 @@ void Player::changeActiveItem(int number)
         damage = 1;
 }
 
-Enemy::Enemy(int a_x, int a_y, int a_max_helth, int a_damage) : Entity(a_x, a_y, a_max_helth)
+Enemy::Enemy(int a_x, int a_y, int a_max_helth, int a_damage, int a_id) : Entity(a_x, a_y, a_max_helth)
 {
     damage = a_damage;
+    id = a_id;
+}
+
+int Enemy::getId()
+{
+    return id;
 }
 
 void generateEmptyRoom(CellMtrx cell_mtrx)
