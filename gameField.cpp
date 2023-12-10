@@ -1,9 +1,9 @@
 #include "gameField.hpp"
-
 Rooms::Rooms() // TODO
 {
-    active_room_x = MAP_SIZE / 2;
-    active_room_y = MAP_SIZE - 1;
+    generateMap();
+    changeActiveRoom(active_room_x, active_room_y);
+    setIsRoomDiscovered(true);
 }
 
 int Rooms::getActiveRoomX()
@@ -40,36 +40,116 @@ bool Rooms::changeActiveRoom(int new_room_x, int new_room_y)
     return true;
 }
 
-void Rooms::generateEmptyRoom()
+void Rooms::generateEmptyRoom(int curr_x, int curr_y)
 {
     for (int column = 0; column < ROOM_SIZE; column++)
     {
-        if (column != ROOM_SIZE / 2)
-            cell_mtrx[0][column] = ctWall;
+        if (column == ROOM_SIZE / 2 && curr_y > 0 && rooms_mtrx[curr_y - 1][curr_x].is_room)
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[0][column] = ctCell;
         else
-            cell_mtrx[0][column] = ctCell;
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[0][column] = ctWall;
     }
     for (int row = 1; row < ROOM_SIZE - 1; row++)
     {
-        if (row != ROOM_SIZE / 2)
-            cell_mtrx[row][0] = ctWall;
+        if (row == ROOM_SIZE / 2 && curr_x > 0 && rooms_mtrx[curr_y][curr_x - 1].is_room)
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[row][0] = ctCell;
         else
-            cell_mtrx[row][0] = ctCell;
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[row][0] = ctWall;
         for (int column = 1; column < ROOM_SIZE - 1; column++)
         {
-            cell_mtrx[row][column] = ctCell;
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[row][column] = ctCell;
         }
-        if (row != ROOM_SIZE / 2)
-            cell_mtrx[row][ROOM_SIZE - 1] = ctWall;
+        if (row == ROOM_SIZE / 2 && curr_x < MAP_SIZE - 1 && rooms_mtrx[curr_y][curr_x + 1].is_room)
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[row][ROOM_SIZE - 1] = ctCell;
         else
-            cell_mtrx[row][ROOM_SIZE - 1] = ctCell;
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[row][ROOM_SIZE - 1] = ctWall;
     }
     for (int column = 0; column < ROOM_SIZE; column++)
     {
-        if (column != ROOM_SIZE / 2)
-            cell_mtrx[ROOM_SIZE - 1][column] = ctWall;
+        if (column == ROOM_SIZE / 2 && curr_y < MAP_SIZE - 1 && rooms_mtrx[curr_y + 1][curr_x].is_room)
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[ROOM_SIZE - 1][column] = ctCell;
         else
-            cell_mtrx[ROOM_SIZE - 1][column] = ctCell;
+            rooms_mtrx[curr_y][curr_x].cell_mtrx[ROOM_SIZE - 1][column] = ctWall;
+    }
+}
+
+bool Rooms::isOneNeighbor(int curr_x, int curr_y)
+{
+    int neighbors = 0;
+
+    if (curr_x > 0 && rooms_mtrx[curr_y][curr_x - 1].is_room)
+    {
+        neighbors++;
+    }
+    if (curr_y > 0 && rooms_mtrx[curr_y - 1][curr_x].is_room)
+    {
+        neighbors++;
+    }
+    if (curr_x < MAP_SIZE - 1 && rooms_mtrx[curr_y][curr_x + 1].is_room)
+    {
+        neighbors++;
+    }
+    if (curr_y < MAP_SIZE - 1 && rooms_mtrx[curr_y + 1][curr_x].is_room)
+    {
+        neighbors++;
+    }
+
+    return neighbors == 1;
+}
+
+void Rooms::_generateMap(int curr_x, int curr_y)
+{
+    rooms_mtrx[curr_y][curr_x].is_room = true;
+    bool is_new_room = rand() % 2;
+    if (curr_x > 0 && !rooms_mtrx[curr_y][curr_x - 1].is_room &&
+        isOneNeighbor(curr_x - 1, curr_y) && is_new_room)
+    {
+        _generateMap(curr_x - 1, curr_y);
+    }
+    is_new_room = rand() % 2;
+    if (curr_y > 0 && !rooms_mtrx[curr_y - 1][curr_x].is_room &&
+        isOneNeighbor(curr_x, curr_y - 1) && is_new_room)
+    {
+        _generateMap(curr_x, curr_y - 1);
+    }
+    is_new_room = rand() % 2;
+    if (curr_x < MAP_SIZE - 1 && !rooms_mtrx[curr_y][curr_x + 1].is_room &&
+        isOneNeighbor(curr_x + 1, curr_y) && is_new_room)
+    {
+        _generateMap(curr_x + 1, curr_y);
+    }
+    is_new_room = rand() % 2;
+    if (curr_y < MAP_SIZE - 1 && !rooms_mtrx[curr_y + 1][curr_x].is_room &&
+        isOneNeighbor(curr_x, curr_y + 1) && is_new_room)
+    {
+        _generateMap(curr_x, curr_y + 1);
+    }
+}
+
+void Rooms::generateMap()
+{
+    active_room_x = MAP_SIZE / 2;
+    active_room_y = MAP_SIZE - 1;
+    for (int i = 0; i < MAP_SIZE; i++)
+    {
+        for (int j = 0; j < MAP_SIZE; j++)
+        {
+            rooms_mtrx[i][j].is_room = false;
+            rooms_mtrx[i][j].is_discovered = false;
+        }
+    }
+    // while кол-во не нужное TODO
+    _generateMap(active_room_x, active_room_y);
+
+    for (int i = 0; i < MAP_SIZE; i++)
+    {
+        for (int j = 0; j < MAP_SIZE; j++)
+        {
+            if (rooms_mtrx[i][j].is_room == true)
+            {
+                generateEmptyRoom(j, i);
+            }
+        }
     }
 }
 

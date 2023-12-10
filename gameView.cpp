@@ -134,3 +134,41 @@ void drawInventory(sf::RenderWindow &window, sf::Font &font, Player &player, std
         }
     }
 }
+
+void drawMiniMap(RenderWindow &window, Rooms &rooms)
+{
+    int draw_x = 1920 - (0.5 * CELL_SIZE) * MAP_SIZE - CELL_SIZE;
+    int draw_y = 1080 - (0.5 * CELL_SIZE) * MAP_SIZE - CELL_SIZE;
+
+    sf::RectangleShape visited_room(sf::Vector2f((0.5 * CELL_SIZE) - BORDER_SIZE, (0.5 * CELL_SIZE) - BORDER_SIZE));
+    visited_room.setFillColor(sf::Color(160, 82, 45));
+    visited_room.setOutlineThickness(BORDER_SIZE);
+    visited_room.setOutlineColor(sf::Color::Black);
+    sf::RectangleShape curr_room(sf::Vector2f((0.5 * CELL_SIZE) - BORDER_SIZE, (0.5 * CELL_SIZE) - BORDER_SIZE));
+    curr_room.setFillColor(sf::Color::Red);
+    curr_room.setOutlineThickness(BORDER_SIZE);
+    curr_room.setOutlineColor(sf::Color::Black);
+    // TODO изначально скрывать всю карту от игрока
+    //  sf::RectangleShape unknown_room(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+    //  unknown_room.setFillColor(sf::Color(55, 55, 55));
+
+    for (int row = 0; row < MAP_SIZE; row++)
+    {
+        for (int column = 0; column < MAP_SIZE; column++)
+        {
+            if (rooms.rooms_mtrx[row][column].is_room)
+            {
+                if (rooms.getActiveRoomX() == column && rooms.getActiveRoomY() == row)
+                {
+                    curr_room.setPosition(draw_x + column * (0.5 * CELL_SIZE), draw_y + row * (0.5 * CELL_SIZE));
+                    window.draw(curr_room);
+                }
+                else
+                {
+                    visited_room.setPosition(draw_x + column * (0.5 * CELL_SIZE), draw_y + row * (0.5 * CELL_SIZE));
+                    window.draw(visited_room);
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,6 @@
 #pragma once
+#include <stdlib.h>
+
 #define ROOM_SIZE 9
 #define MAP_SIZE 5
 
@@ -27,11 +29,13 @@ typedef Room RoomsMtrx[MAP_SIZE][MAP_SIZE];
 class Rooms
 {
 private:
-    RoomsMtrx rooms_mtrx;
     int active_room_x;
     int active_room_y;
+    bool isOneNeighbor(int curr_x, int curr_y);
+    void _generateMap(int curr_x, int curr_y);
 
 public:
+    RoomsMtrx rooms_mtrx;
     Rooms();
     int getActiveRoomX();
     int getActiveRoomY();
@@ -40,7 +44,8 @@ public:
 
     CellMtrx cell_mtrx;
     bool changeActiveRoom(int new_room_x, int new_room_y);
-    void generateEmptyRoom();
+    void generateEmptyRoom(int curr_x, int curr_y);
+    void generateMap();
     void closeRoom();
     void openRoom();
 };

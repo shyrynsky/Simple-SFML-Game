@@ -27,7 +27,7 @@ int main()
 
     GameRes r;
     Rooms rooms;
-    rooms.generateEmptyRoom();
+    // rooms.generateEmptyRoom();
     rooms.closeRoom();
     Player player(1, 4, 100);
 
@@ -86,6 +86,7 @@ int main()
         drawEnemyList(window, enemy_list, r.enemy_sprites, fight_clock);
 
         drawInventory(window, r.font, player, r.item_sprites);
+        drawMiniMap(window, rooms);
 
         window.display();
 

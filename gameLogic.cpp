@@ -140,10 +140,10 @@ bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &e
     }
     if (rooms.changeActiveRoom(next_x, next_y))
     {
+        x = player_next_x;
+        y = player_next_y;
         if (!rooms.getIsRoomDiscovered())
         {
-            x = player_next_x;
-            y = player_next_y;
             Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, *this);
             rooms.closeRoom();
             rooms.setIsRoomDiscovered(true);
@@ -413,7 +413,7 @@ void Enemy::SpawnEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Ent
     {
         int new_x, new_y;
         getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y); // TEST x y могут быть свапнуты
-        Enemy enemy(new_x, new_y, 30, 10, 0);                          // TEST x y могут быть свапнуты
+        Enemy enemy(new_x, new_y, 3, 10, 0);                           // TEST x y могут быть свапнуты
         enemy_list.push_back(enemy);
     }
 }
