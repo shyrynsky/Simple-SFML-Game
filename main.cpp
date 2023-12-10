@@ -1,22 +1,32 @@
 #include <SFML/Graphics.hpp>
 // #include <stdlib.h>
-// #include <ctime>
-// #include <forward_list>
+#include <ctime>
 #include "gameView.hpp"
 #include "gameLogic.hpp"
 #include "gameRes.hpp"
 
 using namespace sf;
 
+void processAfterMove(Player &player, std::list<Enemy> &enemy_list, Rooms rooms, sf::Clock &fight_clock)
+{
+    if (player.getLastAttackDir() != dirUnknown)
+        fight_clock.restart();
+    for (Enemy &enemy : enemy_list)
+    {
+        if (enemy.getLastAttackDir() != dirUnknown)
+            fight_clock.restart();
+    }
+    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
+}
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Game", sf::Style::Close);
     window.setFramerateLimit(120);
-    // srand((unsigned)time(NULL));
+    srand((unsigned)time(NULL));
 
     GameRes r;
     Rooms rooms;
-    // CellMtrx cell_mtrx;
     rooms.generateEmptyRoom();
     rooms.closeRoom();
     Player player(1, 4, 100);
@@ -45,28 +55,20 @@ int main()
                 switch (event.key.code)
                 {
                 case sf::Keyboard::A:
-                    player.move(rooms, dirLeft, enemy_list);
-                    if (player.getLastAttackDir() != dirUnknown) // TODO еще проверку у врагов
-                        fight_clock.restart();
-                    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
+                    if (player.move(rooms, dirLeft, enemy_list))
+                        processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::W:
-                    player.move(rooms, dirUp, enemy_list);
-                    if (player.getLastAttackDir() != dirUnknown)
-                        fight_clock.restart();
-                    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
+                    if (player.move(rooms, dirUp, enemy_list))
+                        processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::S:
-                    player.move(rooms, dirDown, enemy_list);
-                    if (player.getLastAttackDir() != dirUnknown)
-                        fight_clock.restart();
-                    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
+                    if (player.move(rooms, dirDown, enemy_list))
+                        processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::D:
-                    player.move(rooms, dirRight, enemy_list);
-                    if (player.getLastAttackDir() != dirUnknown)
-                        fight_clock.restart();
-                    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
+                    if (player.move(rooms, dirRight, enemy_list))
+                        processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 }
                 if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num6)

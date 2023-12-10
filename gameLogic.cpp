@@ -89,7 +89,7 @@ auto Entity::isEnemy(std::list<Enemy> &enemy_list, int a_x, int a_y)
     return enemy_list.end();
 }
 
-void Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list) // TODO сделать bool
+bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list)
 {
     int next_x = x;
     int next_y = y;
@@ -130,15 +130,18 @@ void Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
                     rooms.openRoom();
             }
             last_atack_dir = direction;
-            return;
+            return true;
         }
         else
         {
             x = next_x;
             y = next_y;
         }
+        last_atack_dir = dirUnknown;
+        return true;
     }
-    last_atack_dir = dirUnknown;
+    else
+        return false;
 }
 
 void Player::changeActiveItem(int number)
@@ -313,66 +316,3 @@ void Enemy::moveEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Enti
         enemy.move(cell_mtrx, player, enemy_list);
     }
 }
-
-// void generateEmptyRoom(CellMtrx cell_mtrx)
-// {
-//     for (int column = 0; column < ROOM_SIZE; column++)
-//     {
-//         if (column != ROOM_SIZE / 2)
-//             cell_mtrx[0][column] = ctWall;
-//         else
-//             cell_mtrx[0][column] = ctCell;
-//     }
-//     for (int row = 1; row < ROOM_SIZE - 1; row++)
-//     {
-//         if (row != ROOM_SIZE / 2)
-//             cell_mtrx[row][0] = ctWall;
-//         else
-//             cell_mtrx[row][0] = ctCell;
-//         for (int column = 1; column < ROOM_SIZE - 1; column++)
-//         {
-//             cell_mtrx[row][column] = ctCell;
-//         }
-//         if (row != ROOM_SIZE / 2)
-//             cell_mtrx[row][ROOM_SIZE - 1] = ctWall;
-//         else
-//             cell_mtrx[row][ROOM_SIZE - 1] = ctCell;
-//     }
-//     for (int column = 0; column < ROOM_SIZE; column++)
-//     {
-//         if (column != ROOM_SIZE / 2)
-//             cell_mtrx[ROOM_SIZE - 1][column] = ctWall;
-//         else
-//             cell_mtrx[ROOM_SIZE - 1][column] = ctCell;
-//     }
-// }
-
-// void closeRoom(CellMtrx cell_mtrx)
-// {
-//     if (cell_mtrx[0][ROOM_SIZE / 2] == ctCell)
-//         cell_mtrx[0][ROOM_SIZE / 2] = ctDoor;
-
-//     if (cell_mtrx[ROOM_SIZE - 1][ROOM_SIZE / 2] == ctCell)
-//         cell_mtrx[ROOM_SIZE - 1][ROOM_SIZE / 2] = ctDoor;
-
-//     if (cell_mtrx[ROOM_SIZE / 2][0] == ctCell)
-//         cell_mtrx[ROOM_SIZE / 2][0] = ctDoor;
-
-//     if (cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] == ctCell)
-//         cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] = ctDoor;
-// }
-
-// void openRoom(CellMtrx cell_mtrx)
-// {
-//     if (cell_mtrx[0][ROOM_SIZE / 2] == ctDoor)
-//         cell_mtrx[0][ROOM_SIZE / 2] = ctCell;
-
-//     if (cell_mtrx[ROOM_SIZE - 1][ROOM_SIZE / 2] == ctDoor)
-//         cell_mtrx[ROOM_SIZE - 1][ROOM_SIZE / 2] = ctCell;
-
-//     if (cell_mtrx[ROOM_SIZE / 2][0] == ctDoor)
-//         cell_mtrx[ROOM_SIZE / 2][0] = ctCell;
-
-//     if (cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] == ctDoor)
-//         cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] = ctCell;
-// }
