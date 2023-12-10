@@ -352,7 +352,8 @@ void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_lis
         }
     }
 
-    if (next_x == player_x && next_y == player_y)
+    if (next_x == player_x && next_y == player_y &&
+        (abs(x - player_x) + abs(y - player_y) == 1))
     {
         int player_health = player.getHealth();
         if (player_health >= damage)

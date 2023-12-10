@@ -4,6 +4,8 @@
 #define ROOM_SIZE 9
 #define MAP_SIZE 7
 
+#include "gameTemplates.hpp"
+
 enum CellType
 {
     ctCell,
@@ -34,6 +36,7 @@ private:
     int rooms_quantity;
     bool isOneNeighbor(int curr_x, int curr_y);
     void _generateMap(int curr_x, int curr_y);
+    void useTemplates(int curr_x, int curr_y);
 
 public:
     RoomsMtrx rooms_mtrx;

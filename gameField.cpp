@@ -1,5 +1,5 @@
 #include "gameField.hpp"
-Rooms::Rooms() // TODO
+Rooms::Rooms()
 {
     generateMap();
     changeActiveRoom(active_room_x, active_room_y);
@@ -155,6 +155,7 @@ void Rooms::generateMap()
             if (rooms_mtrx[i][j].is_room == true)
             {
                 generateEmptyRoom(j, i);
+                useTemplates(j, i);
             }
         }
     }
@@ -188,4 +189,17 @@ void Rooms::openRoom()
 
     if (cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] == ctDoor)
         cell_mtrx[ROOM_SIZE / 2][ROOM_SIZE - 1] = ctCell;
+}
+
+void Rooms::useTemplates(int curr_x, int curr_y)
+{
+    int temp_numb = rand() % TEMPLATES_SIZE;
+    for (int i = 0; i < ROOM_SIZE; i++)
+    {
+        for (int j = 0; j < ROOM_SIZE; j++)
+        {
+            if (templates[temp_numb][i][j] == 1)
+                rooms_mtrx[curr_y][curr_x].cell_mtrx[i][j] = ctWall;
+        }
+    }
 }
