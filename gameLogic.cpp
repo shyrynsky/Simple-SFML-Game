@@ -89,6 +89,71 @@ auto Entity::isEnemy(std::list<Enemy> &enemy_list, int a_x, int a_y)
     return enemy_list.end();
 }
 
+bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list)
+{
+    int next_x = rooms.getActiveRoomX();
+    int next_y = rooms.getActiveRoomY();
+    int player_next_x;
+    int player_next_y;
+    switch (direction)
+    {
+    case dirLeft:
+        if (next_x > 0)
+        {
+            next_x--;
+            player_next_x = ROOM_SIZE - 2;
+            player_next_y = ROOM_SIZE / 2;
+        }
+        else
+            return false;
+        break;
+    case dirUp:
+        if (next_y > 0)
+        {
+            next_y--;
+            player_next_x = ROOM_SIZE / 2;
+            player_next_y = ROOM_SIZE - 2;
+        }
+        else
+            return false;
+        break;
+    case dirDown:
+        if (next_y < MAP_SIZE - 1)
+        {
+            next_y++;
+            player_next_x = ROOM_SIZE / 2;
+            player_next_y = 1;
+        }
+        else
+            return false;
+        break;
+    case dirRight:
+        if (next_x < MAP_SIZE - 1)
+        {
+            next_x++;
+            player_next_x = 1;
+            player_next_y = ROOM_SIZE / 2;
+        }
+        else
+            return false;
+        break;
+    }
+    if (rooms.changeActiveRoom(next_x, next_y))
+    {
+        if (!rooms.getIsRoomDiscovered())
+        {
+            x = player_next_x;
+            y = player_next_y;
+            Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, *this);
+            rooms.closeRoom();
+            rooms.setIsRoomDiscovered(true);
+        }
+        return true;
+    }
+    else
+        return false;
+}
+
 bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list)
 {
     int next_x = x;
@@ -98,18 +163,26 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
     case dirLeft:
         if (next_x > 0)
             next_x--;
+        else if (moveNextRoom(rooms, dirLeft, enemy_list))
+            return false;
         break;
     case dirUp:
         if (next_y > 0)
             next_y--;
+        else if (moveNextRoom(rooms, dirUp, enemy_list))
+            return false;
         break;
     case dirDown:
         if (next_y < ROOM_SIZE - 1)
             next_y++;
+        else if (moveNextRoom(rooms, dirDown, enemy_list))
+            return false;
         break;
     case dirRight:
         if (next_x < ROOM_SIZE - 1)
             next_x++;
+        else if (moveNextRoom(rooms, dirRight, enemy_list))
+            return false;
         break;
     }
 
@@ -314,5 +387,33 @@ void Enemy::moveEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Enti
     for (Enemy &enemy : enemy_list)
     {
         enemy.move(cell_mtrx, player, enemy_list);
+    }
+}
+
+void getRandEmptyCell(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Entity &player, int &x, int &y)
+{
+    bool is_found = false;
+    while (!is_found)
+    {
+        x = rand() % (ROOM_SIZE - 2) + 1;
+        y = rand() % (ROOM_SIZE - 2) + 1;
+        if (cell_mtrx[y][x] == ctCell &&
+            Entity::isEnemy(enemy_list, x, y) == enemy_list.end() &&
+            (player.getX() != x || player.getY() != y))
+        {
+            is_found = true;
+        }
+    }
+}
+
+void Enemy::SpawnEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Entity &player)
+{
+    int n = rand() % 3 + 1;
+    for (int i = 0; i < n; i++)
+    {
+        int new_x, new_y;
+        getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y); // TEST x y могут быть свапнуты
+        Enemy enemy(new_x, new_y, 30, 10, 0);                          // TEST x y могут быть свапнуты
+        enemy_list.push_back(enemy);
     }
 }

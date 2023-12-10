@@ -69,7 +69,6 @@ void drawEntity(sf::RenderWindow &window, Entity &entity, sf::Sprite &sprite, sf
             break;
         }
 
-    // TODO нормально отрисовывать финальные спрайты
     sprite.setPosition(draw_x + 5, draw_y + 20);
     window.draw(sprite);
 

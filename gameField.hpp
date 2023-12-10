@@ -19,6 +19,7 @@ struct Room
 {
     CellMtrx cell_mtrx;
     bool is_discovered;
+    bool is_room;
 };
 
 typedef Room RoomsMtrx[MAP_SIZE][MAP_SIZE];
@@ -32,8 +33,13 @@ private:
 
 public:
     Rooms();
+    int getActiveRoomX();
+    int getActiveRoomY();
+    bool getIsRoomDiscovered();
+    void setIsRoomDiscovered(bool is_discovered);
 
     CellMtrx cell_mtrx;
+    bool changeActiveRoom(int new_room_x, int new_room_y);
     void generateEmptyRoom();
     void closeRoom();
     void openRoom();

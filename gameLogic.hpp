@@ -42,7 +42,6 @@ protected:
     int x, y;
     int damage;
     Direction last_atack_dir;
-    auto isEnemy(std::list<Enemy> &enemy_list, int a_x, int a_y);
 
 public:
     Entity(int a_x, int a_y, int a_max_helth);
@@ -53,6 +52,7 @@ public:
     void setHealth(int a_health);
     int getMaxHealth();
     Direction getLastAttackDir();
+    static auto isEnemy(std::list<Enemy> &enemy_list, int a_x, int a_y);
 };
 
 class Player : public Entity
@@ -68,6 +68,7 @@ public:
     int getActiveItem();
 
     void changeActiveItem(int number);
+    bool moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list);
     bool move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list);
 };
 
@@ -85,4 +86,5 @@ public:
 
     void move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_list);
     static void moveEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Entity &player);
+    static void SpawnEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Entity &player);
 };

@@ -32,10 +32,11 @@ int main()
     Player player(1, 4, 100);
 
     std::list<Enemy> enemy_list;
-    Enemy enemy(4, 4, 30, 10, 0);
-    enemy_list.push_back(enemy);
-    Enemy enemy2(6, 6, 30, 10, 0);
-    enemy_list.push_back(enemy2);
+    Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, player);
+    // Enemy enemy(4, 4, 30, 10, 0);
+    // enemy_list.push_back(enemy);
+    // Enemy enemy2(6, 6, 30, 10, 0);
+    // enemy_list.push_back(enemy2);
 
     sf::Clock anim_clock, fight_clock;
     sf::Event event;

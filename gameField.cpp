@@ -1,9 +1,43 @@
 #include "gameField.hpp"
 
-Rooms::Rooms()
+Rooms::Rooms() // TODO
 {
-    active_room_x = -1;
-    active_room_y = -1; // TODO
+    active_room_x = MAP_SIZE / 2;
+    active_room_y = MAP_SIZE - 1;
+}
+
+int Rooms::getActiveRoomX()
+{
+    return active_room_x;
+}
+int Rooms::getActiveRoomY()
+{
+    return active_room_y;
+}
+
+bool Rooms::getIsRoomDiscovered()
+{
+    return rooms_mtrx[active_room_y][active_room_x].is_discovered;
+}
+void Rooms::setIsRoomDiscovered(bool is_discovered)
+{
+    rooms_mtrx[active_room_y][active_room_x].is_discovered = is_discovered;
+}
+
+bool Rooms::changeActiveRoom(int new_room_x, int new_room_y)
+{
+    if (!rooms_mtrx[new_room_y][new_room_x].is_room)
+        return false;
+    for (int i = 0; i < ROOM_SIZE; i++)
+    {
+        for (int j = 0; j < ROOM_SIZE; j++)
+        {
+            cell_mtrx[i][j] = rooms_mtrx[new_room_y][new_room_x].cell_mtrx[i][j];
+        }
+    }
+    active_room_x = new_room_x;
+    active_room_y = new_room_y;
+    return true;
 }
 
 void Rooms::generateEmptyRoom()
