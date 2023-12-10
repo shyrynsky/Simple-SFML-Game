@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #define ROOM_SIZE 9
-#define MAP_SIZE 5
+#define MAP_SIZE 7
 
 enum CellType
 {
@@ -31,6 +31,7 @@ class Rooms
 private:
     int active_room_x;
     int active_room_y;
+    int rooms_quantity;
     bool isOneNeighbor(int curr_x, int curr_y);
     void _generateMap(int curr_x, int curr_y);
 

@@ -99,27 +99,29 @@ bool Rooms::isOneNeighbor(int curr_x, int curr_y)
 
 void Rooms::_generateMap(int curr_x, int curr_y)
 {
+    if (rooms_mtrx[curr_y][curr_x].is_room == false)
+        rooms_quantity++;
     rooms_mtrx[curr_y][curr_x].is_room = true;
     bool is_new_room = rand() % 2;
-    if (curr_x > 0 && !rooms_mtrx[curr_y][curr_x - 1].is_room &&
+    if (curr_x > 0 && //! rooms_mtrx[curr_y][curr_x - 1].is_room &&
         isOneNeighbor(curr_x - 1, curr_y) && is_new_room)
     {
         _generateMap(curr_x - 1, curr_y);
     }
     is_new_room = rand() % 2;
-    if (curr_y > 0 && !rooms_mtrx[curr_y - 1][curr_x].is_room &&
+    if (curr_y > 0 && //! rooms_mtrx[curr_y - 1][curr_x].is_room &&
         isOneNeighbor(curr_x, curr_y - 1) && is_new_room)
     {
         _generateMap(curr_x, curr_y - 1);
     }
     is_new_room = rand() % 2;
-    if (curr_x < MAP_SIZE - 1 && !rooms_mtrx[curr_y][curr_x + 1].is_room &&
+    if (curr_x < MAP_SIZE - 1 && //! rooms_mtrx[curr_y][curr_x + 1].is_room &&
         isOneNeighbor(curr_x + 1, curr_y) && is_new_room)
     {
         _generateMap(curr_x + 1, curr_y);
     }
     is_new_room = rand() % 2;
-    if (curr_y < MAP_SIZE - 1 && !rooms_mtrx[curr_y + 1][curr_x].is_room &&
+    if (curr_y < MAP_SIZE - 1 && //! rooms_mtrx[curr_y + 1][curr_x].is_room &&
         isOneNeighbor(curr_x, curr_y + 1) && is_new_room)
     {
         _generateMap(curr_x, curr_y + 1);
@@ -128,8 +130,9 @@ void Rooms::_generateMap(int curr_x, int curr_y)
 
 void Rooms::generateMap()
 {
+    rooms_quantity = 0;
     active_room_x = MAP_SIZE / 2;
-    active_room_y = MAP_SIZE - 1;
+    active_room_y = MAP_SIZE / 2;
     for (int i = 0; i < MAP_SIZE; i++)
     {
         for (int j = 0; j < MAP_SIZE; j++)
@@ -138,8 +141,12 @@ void Rooms::generateMap()
             rooms_mtrx[i][j].is_discovered = false;
         }
     }
-    // while кол-во не нужное TODO
-    _generateMap(active_room_x, active_room_y);
+    int i = 0;
+    while (rooms_quantity < 10 && i < 10)
+    {
+        _generateMap(active_room_x, active_room_y);
+        i++;
+    }
 
     for (int i = 0; i < MAP_SIZE; i++)
     {

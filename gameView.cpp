@@ -137,7 +137,7 @@ void drawInventory(sf::RenderWindow &window, sf::Font &font, Player &player, std
 
 void drawMiniMap(RenderWindow &window, Rooms &rooms)
 {
-    int draw_x = 1920 - (0.5 * CELL_SIZE) * MAP_SIZE - CELL_SIZE;
+    int draw_x = 1920 - (0.5 * CELL_SIZE) * MAP_SIZE - (0.5 * CELL_SIZE);
     int draw_y = 1080 - (0.5 * CELL_SIZE) * MAP_SIZE - CELL_SIZE;
 
     sf::RectangleShape visited_room(sf::Vector2f((0.5 * CELL_SIZE) - BORDER_SIZE, (0.5 * CELL_SIZE) - BORDER_SIZE));
