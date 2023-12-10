@@ -2,20 +2,20 @@
 #include <string>
 // #include <vector>
 #include <list>
-
-#define ROOM_SIZE 9
+#include "gameField.hpp"
+// #define ROOM_SIZE 9
 #define INVENTORY_SIZE 6
 
-enum CellType
-{
-    ctCell,
-    ctWall,
-    ctDoor,
-    // ctPlayer,
-    // ctEnemy
-    ctStartSearch,
-    ctEndSearch = -1
-};
+// enum CellType
+// {
+//     ctCell,
+//     ctWall,
+//     ctDoor,
+//     // ctPlayer,
+//     // ctEnemy
+//     ctStartSearch,
+//     ctEndSearch = -1
+// };
 
 enum Direction
 {
@@ -26,7 +26,8 @@ enum Direction
     dirUnknown
 };
 
-typedef CellType CellMtrx[ROOM_SIZE][ROOM_SIZE];
+// typedef CellType CellMtrx[ROOM_SIZE][ROOM_SIZE];
+
 typedef int SearchMatrix[ROOM_SIZE][ROOM_SIZE];
 
 struct Item
@@ -81,7 +82,7 @@ public:
     int getActiveItem();
 
     void changeActiveItem(int number);
-    void move(CellMtrx cell_mtrx, Direction direction, std::list<Enemy> &enemy_list);
+    void move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list);
 };
 
 class Enemy : public Entity
@@ -100,6 +101,6 @@ public:
     static void moveEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Entity &player);
 };
 
-void generateEmptyRoom(CellMtrx cell_mtrx);
-void closeRoom(CellMtrx cell_mtrx);
-void openRoom(CellMtrx cell_mtrx);
+// void generateEmptyRoom(CellMtrx cell_mtrx);
+// void closeRoom(CellMtrx cell_mtrx);
+// void openRoom(CellMtrx cell_mtrx);

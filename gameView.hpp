@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <list>
+#include "gameField.hpp"
 #include "gameLogic.hpp"
 
 using namespace sf;

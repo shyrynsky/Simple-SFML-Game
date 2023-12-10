@@ -15,10 +15,10 @@ int main()
     // srand((unsigned)time(NULL));
 
     GameRes r;
-
-    CellMtrx cell_mtrx;
-    generateEmptyRoom(cell_mtrx);
-    closeRoom(cell_mtrx);
+    Rooms rooms;
+    // CellMtrx cell_mtrx;
+    rooms.generateEmptyRoom();
+    rooms.closeRoom();
     Player player(1, 4, 100);
 
     std::list<Enemy> enemy_list;
@@ -45,28 +45,28 @@ int main()
                 switch (event.key.code)
                 {
                 case sf::Keyboard::A:
-                    player.move(cell_mtrx, dirLeft, enemy_list);
+                    player.move(rooms, dirLeft, enemy_list);
                     if (player.getLastAttackDir() != dirUnknown) // TODO еще проверку у врагов
                         fight_clock.restart();
-                    Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
+                    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
                     break;
                 case sf::Keyboard::W:
-                    player.move(cell_mtrx, dirUp, enemy_list);
+                    player.move(rooms, dirUp, enemy_list);
                     if (player.getLastAttackDir() != dirUnknown)
                         fight_clock.restart();
-                    Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
+                    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
                     break;
                 case sf::Keyboard::S:
-                    player.move(cell_mtrx, dirDown, enemy_list);
+                    player.move(rooms, dirDown, enemy_list);
                     if (player.getLastAttackDir() != dirUnknown)
                         fight_clock.restart();
-                    Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
+                    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
                     break;
                 case sf::Keyboard::D:
-                    player.move(cell_mtrx, dirRight, enemy_list);
+                    player.move(rooms, dirRight, enemy_list);
                     if (player.getLastAttackDir() != dirUnknown)
                         fight_clock.restart();
-                    Enemy::moveEnemyList(cell_mtrx, enemy_list, player);
+                    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
                     break;
                 }
                 if (event.key.code >= sf::Keyboard::Num1 && event.key.code <= sf::Keyboard::Num6)
@@ -77,7 +77,7 @@ int main()
 
         window.clear(Color(195, 192, 188));
 
-        drawRoom(window, cell_mtrx);
+        drawRoom(window, rooms.cell_mtrx);
 
         drawEntity(window, player, r.player_spite, fight_clock);
         drawEnemyList(window, enemy_list, r.enemy_sprites, fight_clock);
