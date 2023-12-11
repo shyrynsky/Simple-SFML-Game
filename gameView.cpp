@@ -161,8 +161,8 @@ void drawMiniMap(RenderWindow &window, Rooms &rooms)
     curr_room.setOutlineThickness(BORDER_SIZE);
     curr_room.setOutlineColor(sf::Color::Black);
     // TODO изначально скрывать всю карту от игрока
-    //  sf::RectangleShape unknown_room(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-    //  unknown_room.setFillColor(sf::Color(55, 55, 55));
+    sf::RectangleShape unvisited_room(sf::Vector2f((0.5 * CELL_SIZE), (0.5 * CELL_SIZE)));
+    unvisited_room.setFillColor(sf::Color(70, 70, 70, 70));
 
     for (int row = 0; row < MAP_SIZE; row++)
     {
@@ -175,10 +175,15 @@ void drawMiniMap(RenderWindow &window, Rooms &rooms)
                     curr_room.setPosition(draw_x + column * (0.5 * CELL_SIZE), draw_y + row * (0.5 * CELL_SIZE));
                     window.draw(curr_room);
                 }
-                else
+                else if (rooms.rooms_mtrx[row][column].is_discovered)
                 {
                     visited_room.setPosition(draw_x + column * (0.5 * CELL_SIZE), draw_y + row * (0.5 * CELL_SIZE));
                     window.draw(visited_room);
+                }
+                else
+                {
+                    unvisited_room.setPosition(draw_x + column * (0.5 * CELL_SIZE), draw_y + row * (0.5 * CELL_SIZE));
+                    window.draw(unvisited_room);
                 }
             }
         }
