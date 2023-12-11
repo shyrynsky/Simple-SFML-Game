@@ -89,7 +89,31 @@ auto Entity::isEnemy(std::list<Enemy> &enemy_list, int a_x, int a_y)
     return enemy_list.end();
 }
 
-bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list)
+auto Player::isGroundItem(std::list<GroundItem> &ground_item_list, int a_x, int a_y)
+{
+    for (auto iter = ground_item_list.begin(); iter != ground_item_list.end(); iter++)
+    {
+        if (iter->getX() == a_x && iter->getY() == a_y)
+        {
+            return iter;
+        }
+    }
+    return ground_item_list.end();
+}
+
+void Player::takeItems(std::list<GroundItem> &ground_item_list)
+{
+    auto ground_item_iter = isGroundItem(ground_item_list, x, y);
+    if (ground_item_iter != ground_item_list.end())
+    {
+        items[active_item - 1] = ground_item_iter->item;
+        if (ground_item_iter->item.type == Item::tWeapon)
+            changeActiveItem(active_item);
+        ground_item_list.erase(ground_item_iter);
+    }
+}
+
+bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list)
 {
     int next_x = rooms.getActiveRoomX();
     int next_y = rooms.getActiveRoomY();
@@ -142,9 +166,11 @@ bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &e
     {
         x = player_next_x;
         y = player_next_y;
+        ground_item_list.clear();
         if (!rooms.getIsRoomDiscovered())
         {
             Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, *this);
+            GroundItem::SpawnGroundItemList(rooms.cell_mtrx, enemy_list, *this, ground_item_list);
             rooms.closeRoom();
             rooms.setIsRoomDiscovered(true);
         }
@@ -154,7 +180,7 @@ bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &e
         return false;
 }
 
-bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list)
+bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list)
 {
     int next_x = x;
     int next_y = y;
@@ -163,25 +189,25 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
     case dirLeft:
         if (next_x > 0)
             next_x--;
-        else if (moveNextRoom(rooms, dirLeft, enemy_list))
+        else if (moveNextRoom(rooms, dirLeft, enemy_list, ground_item_list))
             return false;
         break;
     case dirUp:
         if (next_y > 0)
             next_y--;
-        else if (moveNextRoom(rooms, dirUp, enemy_list))
+        else if (moveNextRoom(rooms, dirUp, enemy_list, ground_item_list))
             return false;
         break;
     case dirDown:
         if (next_y < ROOM_SIZE - 1)
             next_y++;
-        else if (moveNextRoom(rooms, dirDown, enemy_list))
+        else if (moveNextRoom(rooms, dirDown, enemy_list, ground_item_list))
             return false;
         break;
     case dirRight:
         if (next_x < ROOM_SIZE - 1)
             next_x++;
-        else if (moveNextRoom(rooms, dirRight, enemy_list))
+        else if (moveNextRoom(rooms, dirRight, enemy_list, ground_item_list))
             return false;
         break;
     }
@@ -198,6 +224,7 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
             {
                 x = next_x;
                 y = next_y;
+                takeItems(ground_item_list);
                 enemy_list.erase(enemy_iter);
                 if (enemy_list.size() == 0)
                     rooms.openRoom();
@@ -209,6 +236,7 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
         {
             x = next_x;
             y = next_y;
+            takeItems(ground_item_list);
         }
         last_atack_dir = dirUnknown;
         return true;
@@ -416,5 +444,44 @@ void Enemy::SpawnEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Ent
         getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y); // TEST x y могут быть свапнуты
         Enemy enemy(new_x, new_y, 3, 10, 0);                           // TEST x y могут быть свапнуты
         enemy_list.push_back(enemy);
+    }
+}
+
+GroundItem::GroundItem(int a_x, int a_y, Item a_item)
+{
+    x = a_x;
+    y = a_y;
+    item = a_item;
+}
+
+int GroundItem::getX()
+{
+    return x;
+}
+
+int GroundItem::getY()
+{
+    return y;
+}
+
+void GroundItem::SpawnGroundItemList(CellMtrx cell_mtrx,
+                                     std::list<Enemy> &enemy_list,
+                                     Entity &player,
+                                     std::list<GroundItem> &ground_item_list)
+{
+    int n = rand() % 3;
+    if (n >= 2)
+    {
+        int new_x, new_y;
+        getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y); // TEST x y могут быть свапнуты
+
+        Item new_item; // TODO
+        new_item.id = 0;
+        new_item.name = "обычный меч";
+        new_item.type = Item::tWeapon;
+        new_item.prop.damage = 10;
+
+        GroundItem ground_item(new_x, new_y, new_item); // TEST x y могут быть свапнуты
+        ground_item_list.push_back(ground_item);
     }
 }

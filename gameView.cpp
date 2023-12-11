@@ -93,6 +93,18 @@ void drawEnemyList(sf::RenderWindow &window, std::list<Enemy> &enemy_list, std::
     }
 }
 
+void drawGroundItemList(RenderWindow &window, std::list<GroundItem> &ground_item_list, std::vector<Sprite> &item_ground_sprites)
+{
+    for (GroundItem ground_item : ground_item_list)
+    {
+        int id = ground_item.item.id;
+        int x = ground_item.getX();
+        int y = ground_item.getY();
+        item_ground_sprites[id].setPosition(start_x + x * CELL_SIZE + 20, start_y + y * CELL_SIZE + 20);
+        window.draw(item_ground_sprites[id]);
+    }
+}
+
 void drawInventory(sf::RenderWindow &window, sf::Font &font, Player &player, std::vector<sf::Sprite> &item_sprites)
 {
     int active_item = player.getActiveItem();

@@ -24,6 +24,12 @@ GameRes::GameRes()
     item_sprites.push_back(curr_item_sprite);
     curr_item_sprite.setTexture(potion1_texture); // id 1
     item_sprites.push_back(curr_item_sprite);
+
+    curr_item_sprite.setScale(0.6, 0.6);
+    curr_item_sprite.setTexture(sword1_texture);
+    item_ground_sprites.push_back(curr_item_sprite);
+    curr_item_sprite.setTexture(potion1_texture);
+    item_ground_sprites.push_back(curr_item_sprite);
 }
 
 void GameRes::animateSprites(Clock &anim_clock)

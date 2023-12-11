@@ -33,7 +33,28 @@ struct Item
     } prop;
 };
 
+class Entity;
 class Enemy;
+
+class GroundItem
+{
+private:
+    int x, y;
+
+public:
+    Item item;
+
+    GroundItem(int a_x, int a_y, Item a_item);
+
+    int getX();
+    int getY();
+
+    static void SpawnGroundItemList(CellMtrx cell_mtrx,
+                                    std::list<Enemy> &enemy_list,
+                                    Entity &player,
+                                    std::list<GroundItem> &ground_item_list);
+    // static void SpawnGroundItemList(CellMtrx cell_mtrx, Entity &player, std::list<GroundItem> &ground_item_list);
+};
 
 class Entity
 {
@@ -61,6 +82,8 @@ private:
     Item items[INVENTORY_SIZE];
     int active_item;
 
+    auto isGroundItem(std::list<GroundItem> &ground_item_list, int a_x, int a_y);
+
 public:
     Player(int a_x, int a_y, int a_max_helth);
 
@@ -68,8 +91,9 @@ public:
     int getActiveItem();
 
     void changeActiveItem(int number);
-    bool moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list);
-    bool move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list);
+    void takeItems(std::list<GroundItem> &ground_item_list);
+    bool moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list);
+    bool move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list);
 };
 
 class Enemy : public Entity

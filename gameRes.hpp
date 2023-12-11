@@ -15,8 +15,9 @@ private:
 public:
     Font font;
     sf::Sprite player_spite;
-    std::vector<Sprite> item_sprites;  // TODO заполнить вектор
-    std::vector<Sprite> enemy_sprites; // TODO заполнить вектор
+    std::vector<Sprite> item_sprites;        // TODO заполнить вектор
+    std::vector<Sprite> item_ground_sprites; // TODO заполнить вектор
+    std::vector<Sprite> enemy_sprites;       // TODO заполнить вектор
 
     GameRes();
     void animateSprites(Clock &anim_clock);

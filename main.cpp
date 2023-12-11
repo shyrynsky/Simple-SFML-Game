@@ -11,12 +11,12 @@ void processAfterMove(Player &player, std::list<Enemy> &enemy_list, Rooms rooms,
 {
     if (player.getLastAttackDir() != dirUnknown)
         fight_clock.restart();
+    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
     for (Enemy &enemy : enemy_list)
     {
         if (enemy.getLastAttackDir() != dirUnknown)
             fight_clock.restart();
     }
-    Enemy::moveEnemyList(rooms.cell_mtrx, enemy_list, player);
 }
 
 int main()
@@ -28,11 +28,13 @@ int main()
     GameRes r;
     Rooms rooms;
     // rooms.generateEmptyRoom();
-    rooms.closeRoom();
+    // rooms.closeRoom();
     Player player(1, 4, 100);
 
     std::list<Enemy> enemy_list;
-    Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, player);
+    // Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, player);
+    std::list<GroundItem> ground_item_list;
+
     // Enemy enemy(4, 4, 30, 10, 0);
     // enemy_list.push_back(enemy);
     // Enemy enemy2(6, 6, 30, 10, 0);
@@ -56,19 +58,19 @@ int main()
                 switch (event.key.code)
                 {
                 case sf::Keyboard::A:
-                    if (player.move(rooms, dirLeft, enemy_list))
+                    if (player.move(rooms, dirLeft, enemy_list, ground_item_list))
                         processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::W:
-                    if (player.move(rooms, dirUp, enemy_list))
+                    if (player.move(rooms, dirUp, enemy_list, ground_item_list))
                         processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::S:
-                    if (player.move(rooms, dirDown, enemy_list))
+                    if (player.move(rooms, dirDown, enemy_list, ground_item_list))
                         processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::D:
-                    if (player.move(rooms, dirRight, enemy_list))
+                    if (player.move(rooms, dirRight, enemy_list, ground_item_list))
                         processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 }
@@ -82,6 +84,7 @@ int main()
 
         drawRoom(window, rooms.cell_mtrx);
 
+        drawGroundItemList(window, ground_item_list, r.item_ground_sprites);
         drawEntity(window, player, r.player_spite, fight_clock);
         drawEnemyList(window, enemy_list, r.enemy_sprites, fight_clock);
 
