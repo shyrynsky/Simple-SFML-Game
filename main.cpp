@@ -27,18 +27,19 @@ int main()
 
     GameRes r;
     Rooms rooms;
-    // rooms.generateEmptyRoom();
     // rooms.closeRoom();
-    Player player(1, 4, 100);
+    Player player(2, 4, 100);
 
     std::list<Enemy> enemy_list;
     // Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, player);
     std::list<GroundItem> ground_item_list;
+    GroundItem ground_item1(4, 4, item_set[0]);
+    ground_item_list.push_back(ground_item1);
+    GroundItem ground_item2(4, 5, item_set[1]);
+    ground_item_list.push_back(ground_item2);
 
     // Enemy enemy(4, 4, 30, 10, 0);
     // enemy_list.push_back(enemy);
-    // Enemy enemy2(6, 6, 30, 10, 0);
-    // enemy_list.push_back(enemy2);
 
     sf::Clock anim_clock, fight_clock;
     sf::Event event;

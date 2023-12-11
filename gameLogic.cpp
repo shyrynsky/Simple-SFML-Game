@@ -48,19 +48,9 @@ Player::Player(int a_x, int a_y, int a_max_helth) : Entity(a_x, a_y, a_max_helth
     empty_item.name = "";
     empty_item.type = Item::Type::tUndef;
 
-    items[0].id = 0;
-    items[0].name = "обычный меч";
-    items[0].type = Item::tWeapon;
-    items[0].prop.damage = 10;
-
-    items[5].id = 1;
-    items[5].name = "малое зелье здоровья";
-    items[5].type = Item::tPotion;
-    items[5].prop.health = 30;
-
     health = max_health;
 
-    for (int i = 1; i < INVENTORY_SIZE - 1; i++)
+    for (int i = 0; i < INVENTORY_SIZE; i++)
     {
         items[i] = empty_item;
     }
@@ -218,7 +208,7 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
         if (enemy_iter != enemy_list.end())
         {
             int enemy_health = enemy_iter->getHealth();
-            if (enemy_health >= damage)
+            if (enemy_health > damage)
                 enemy_iter->setHealth(enemy_health - damage);
             else
             {
@@ -384,7 +374,7 @@ void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_lis
         (abs(x - player_x) + abs(y - player_y) == 1))
     {
         int player_health = player.getHealth();
-        if (player_health >= damage)
+        if (player_health > damage)
             player.setHealth(player_health - damage);
         else
         {
@@ -441,8 +431,11 @@ void Enemy::SpawnEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Ent
     for (int i = 0; i < n; i++)
     {
         int new_x, new_y;
-        getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y); // TEST x y могут быть свапнуты
-        Enemy enemy(new_x, new_y, 3, 10, 0);                           // TEST x y могут быть свапнуты
+        getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y);
+
+        int enemy_numb = rand() % ENEMY_SET_SIZE;
+        Enemy enemy(new_x, new_y, enemy_set[enemy_numb].health,
+                    enemy_set[enemy_numb].damage, enemy_set[enemy_numb].id);
         enemy_list.push_back(enemy);
     }
 }
@@ -473,15 +466,10 @@ void GroundItem::SpawnGroundItemList(CellMtrx cell_mtrx,
     if (n >= 2)
     {
         int new_x, new_y;
-        getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y); // TEST x y могут быть свапнуты
+        getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y);
 
-        Item new_item; // TODO
-        new_item.id = 0;
-        new_item.name = "обычный меч";
-        new_item.type = Item::tWeapon;
-        new_item.prop.damage = 10;
-
-        GroundItem ground_item(new_x, new_y, new_item); // TEST x y могут быть свапнуты
+        int item_numb = rand() % ITEM_SET_SIZE;
+        GroundItem ground_item(new_x, new_y, item_set[item_numb]);
         ground_item_list.push_back(ground_item);
     }
 }

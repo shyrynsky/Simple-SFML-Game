@@ -155,7 +155,8 @@ void Rooms::generateMap()
             if (rooms_mtrx[i][j].is_room == true)
             {
                 generateEmptyRoom(j, i);
-                useTemplates(j, i);
+                if (active_room_x != j || active_room_y != i)
+                    useTemplates(j, i);
             }
         }
     }

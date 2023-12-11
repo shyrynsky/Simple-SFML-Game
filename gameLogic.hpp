@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <list>
+#include "gameSets.hpp"
 #include "gameField.hpp"
 
 #define INVENTORY_SIZE 6
@@ -15,23 +16,6 @@ enum Direction
 };
 
 typedef int SearchMatrix[ROOM_SIZE][ROOM_SIZE];
-
-struct Item
-{
-    int id;
-    std::string name;
-    enum Type
-    {
-        tUndef,
-        tWeapon,
-        tPotion
-    } type;
-    union Prop
-    {
-        int damage;
-        int health;
-    } prop;
-};
 
 class Entity;
 class Enemy;
@@ -53,7 +37,6 @@ public:
                                     std::list<Enemy> &enemy_list,
                                     Entity &player,
                                     std::list<GroundItem> &ground_item_list);
-    // static void SpawnGroundItemList(CellMtrx cell_mtrx, Entity &player, std::list<GroundItem> &ground_item_list);
 };
 
 class Entity
