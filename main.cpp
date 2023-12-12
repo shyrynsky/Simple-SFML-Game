@@ -1,5 +1,4 @@
 #include <SFML/Graphics.hpp>
-// #include <stdlib.h>
 #include <ctime>
 #include "gameView.hpp"
 #include "gameLogic.hpp"
@@ -27,19 +26,15 @@ int main()
 
     GameRes r;
     Rooms rooms;
-    // rooms.closeRoom();
+    std::string mesStr;
     Player player(2, 4, 100);
 
     std::list<Enemy> enemy_list;
-    // Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, player);
     std::list<GroundItem> ground_item_list;
     GroundItem ground_item1(4, 4, item_set[0]);
     ground_item_list.push_back(ground_item1);
     GroundItem ground_item2(4, 5, item_set[ITEM_SET_SIZE - 2]);
     ground_item_list.push_back(ground_item2);
-
-    // Enemy enemy(4, 4, 30, 10, 0);
-    // enemy_list.push_back(enemy);
 
     sf::Clock anim_clock, fight_clock;
     sf::Event event;
@@ -59,19 +54,19 @@ int main()
                 switch (event.key.code)
                 {
                 case sf::Keyboard::A:
-                    if (player.move(rooms, dirLeft, enemy_list, ground_item_list))
+                    if (player.move(rooms, dirLeft, enemy_list, ground_item_list, mesStr))
                         processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::W:
-                    if (player.move(rooms, dirUp, enemy_list, ground_item_list))
+                    if (player.move(rooms, dirUp, enemy_list, ground_item_list, mesStr))
                         processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::S:
-                    if (player.move(rooms, dirDown, enemy_list, ground_item_list))
+                    if (player.move(rooms, dirDown, enemy_list, ground_item_list, mesStr))
                         processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 case sf::Keyboard::D:
-                    if (player.move(rooms, dirRight, enemy_list, ground_item_list))
+                    if (player.move(rooms, dirRight, enemy_list, ground_item_list, mesStr))
                         processAfterMove(player, enemy_list, rooms, fight_clock);
                     break;
                 }
@@ -91,6 +86,7 @@ int main()
 
         drawInventory(window, r.font, player, r.item_sprites);
         drawMiniMap(window, rooms);
+        drawPlayerStatus(window, player, r.font, mesStr);
 
         window.display();
 

@@ -12,8 +12,6 @@ enum CellType
     ctCell,
     ctWall,
     ctDoor,
-    // ctPlayer,
-    // ctEnemy
     ctStartSearch,
     ctEndSearch = -1
 };

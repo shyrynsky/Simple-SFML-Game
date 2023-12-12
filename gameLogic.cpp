@@ -19,6 +19,11 @@ int Entity::getY()
     return y;
 }
 
+int Entity::getDamage()
+{
+    return damage;
+}
+
 int Entity::getHealth()
 {
     return health;
@@ -91,7 +96,7 @@ auto Player::isGroundItem(std::list<GroundItem> &ground_item_list, int a_x, int 
     return ground_item_list.end();
 }
 
-void Player::takeItems(std::list<GroundItem> &ground_item_list)
+void Player::takeItems(std::list<GroundItem> &ground_item_list, std::string &mes)
 {
     auto ground_item_iter = isGroundItem(ground_item_list, x, y);
     if (ground_item_iter != ground_item_list.end())
@@ -99,6 +104,7 @@ void Player::takeItems(std::list<GroundItem> &ground_item_list)
         items[active_item - 1] = ground_item_iter->item;
         if (ground_item_iter->item.type == Item::tWeapon)
             changeActiveItem(active_item);
+        mes = ground_item_iter->item.name;
         ground_item_list.erase(ground_item_iter);
     }
 }
@@ -202,7 +208,7 @@ bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &e
         return false;
 }
 
-bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list)
+bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list, std::string &mes)
 {
     int next_x = x;
     int next_y = y;
@@ -246,7 +252,7 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
             {
                 x = next_x;
                 y = next_y;
-                takeItems(ground_item_list);
+                takeItems(ground_item_list, mes);
                 enemy_list.erase(enemy_iter);
                 if (enemy_list.size() == 0)
                 {
@@ -265,7 +271,7 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
         {
             x = next_x;
             y = next_y;
-            takeItems(ground_item_list);
+            takeItems(ground_item_list, mes);
         }
         last_atack_dir = dirUnknown;
         return true;
@@ -418,7 +424,7 @@ void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_lis
             player.setHealth(player_health - damage);
         else
         {
-            // конец игры
+            // TODO проиграл!!
             exit(EXIT_SUCCESS);
         }
         Direction direction = dirUnknown;

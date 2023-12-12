@@ -52,6 +52,7 @@ public:
 
     int getX();
     int getY();
+    int getDamage();
     int getHealth();
     void setHealth(int a_health);
     int getMaxHealth();
@@ -74,9 +75,9 @@ public:
     int getActiveItem();
 
     void changeActiveItem(int number);
-    void takeItems(std::list<GroundItem> &ground_item_list);
+    void takeItems(std::list<GroundItem> &ground_item_list, std::string &mes);
     bool moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list);
-    bool move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list);
+    bool move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list, std::string &mes);
 };
 
 class Enemy : public Entity

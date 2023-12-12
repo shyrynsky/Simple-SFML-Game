@@ -197,3 +197,70 @@ void drawMiniMap(RenderWindow &window, Rooms &rooms)
         }
     }
 }
+
+void drawPlayerStatus(RenderWindow &window, Player &player, sf::Font &font, std::string &mes)
+{
+    int curr_health = player.getHealth();
+    int curr_max_health = player.getMaxHealth();
+    int draw_x = 1920 - CELL_SIZE * 4.5;
+    int draw_y = start_y + CELL_SIZE * 0.5;
+    const int height = CELL_SIZE * 0.7;
+    const int width = CELL_SIZE * 4.0;
+
+    RectangleShape health_bar(Vector2f(width, height));
+    health_bar.setOutlineThickness(BORDER_SIZE);
+    health_bar.setOutlineColor(Color::Black);
+    health_bar.setFillColor(Color(0, 0, 0, 0));
+    health_bar.setPosition(draw_x + (BORDER_SIZE), draw_y + (BORDER_SIZE));
+    RectangleShape healt_bar_inner(Vector2f(
+        width * curr_health / curr_max_health, height));
+    healt_bar_inner.setFillColor(Color::Red);
+    healt_bar_inner.setPosition(draw_x + (BORDER_SIZE), draw_y + (BORDER_SIZE));
+    window.draw(health_bar);
+    window.draw(healt_bar_inner);
+
+    Text text;
+    text.setFont(font);
+    text.setFillColor(Color::Black);
+    text.setCharacterSize(40);
+    text.setOutlineThickness(0.6);
+
+    text.setString("Health: " + std::to_string(curr_health) + " / " + std::to_string(curr_max_health));
+    text.setPosition(draw_x, draw_y + height + CELL_SIZE * 0.2);
+    window.draw(text);
+
+    text.setString("Damage: " + std::to_string(player.getDamage()));
+    text.setPosition(draw_x, draw_y + height + CELL_SIZE * 0.9);
+    window.draw(text);
+
+    RectangleShape mes_bar(Vector2f(width, CELL_SIZE * 1.0));
+    mes_bar.setOutlineThickness(BORDER_SIZE);
+    mes_bar.setOutlineColor(Color::Black);
+    mes_bar.setFillColor(Color::White);
+    mes_bar.setPosition(draw_x, draw_y + height + CELL_SIZE * 1.9);
+    window.draw(mes_bar);
+
+    static std::string pred_mes;
+    static Clock mes_clock;
+    if (pred_mes != mes)
+    {
+        mes_clock.restart();
+        pred_mes = mes;
+    }
+    if (mes_clock.getElapsedTime().asSeconds() <= 4 && mes.size() > 0)
+    {
+        text.setCharacterSize(30);
+        text.setOutlineThickness(0.4);
+        text.setString("I got");
+        text.setPosition(draw_x + 5, draw_y + height + CELL_SIZE * 2.0);
+        window.draw(text);
+        text.setString(mes);
+        text.setPosition(draw_x + 5, draw_y + height + CELL_SIZE * 2.4);
+        window.draw(text);
+    }
+    else if (mes.size() > 0)
+    {
+        mes.clear();
+        pred_mes = mes;
+    }
+}

@@ -18,3 +18,5 @@ void drawGroundItemList(RenderWindow &window, std::list<GroundItem> &ground_item
 void drawInventory(RenderWindow &window, Font &font, Player &player, std::vector<Sprite> &item_sprites);
 
 void drawMiniMap(RenderWindow &window, Rooms &rooms);
+
+void drawPlayerStatus(RenderWindow &window, Player &player, sf::Font &font, std::string &mes);
