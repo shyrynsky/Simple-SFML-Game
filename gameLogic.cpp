@@ -243,6 +243,7 @@ void Player::changeActiveItem(int number)
     else if (items[number - 1].type == Item::tPotion)
     {
         int curr_health = health + items[number - 1].prop.health;
+        curr_health = curr_health > 0 ? curr_health : 1;
         health = curr_health > max_health ? max_health : curr_health;
         items[number - 1].type = Item::tUndef;
         damage = 1;
@@ -463,7 +464,7 @@ void GroundItem::SpawnGroundItemList(CellMtrx cell_mtrx,
                                      std::list<GroundItem> &ground_item_list)
 {
     int n = rand() % 3;
-    if (n >= 2)
+    if (n >= 1)
     {
         int new_x, new_y;
         getRandEmptyCell(cell_mtrx, enemy_list, player, new_x, new_y);

@@ -11,25 +11,39 @@ GameRes::GameRes()
     player_texture.loadFromImage(player1_img);
     player_spite.setTexture(player_texture);
 
-    enemy1_img.loadFromFile("enemy1.png");
-    enemy2_img.loadFromFile("enemy2.png");
-    enemy_texture.loadFromImage(enemy1_img);
-    curr_enemy_sprite.setTexture(enemy_texture); // id 0
-    enemy_sprites.push_back(curr_enemy_sprite);
+    std::vector<std::string> enemy_path = {"enemy1.png", "enemy2.png",
+                                           "enemy3.png", "enemy4.png",
+                                           "enemy5.png", "enemy6.png"};
+    enemy_image_arr.resize(enemy_path.size());
+    for (int i = 0; i < enemy_path.size(); i++)
+    {
+        enemy_image_arr[i].loadFromFile(enemy_path[i]);
+    }
+    enemy_texture_arr.resize(enemy_path.size() / 2);
+    for (int i = 0; i < enemy_path.size(); i += 2)
+    {
+        enemy_texture_arr[i / 2].loadFromImage(enemy_image_arr[i]);
+        curr_enemy_sprite.setTexture(enemy_texture_arr[i / 2]);
+        enemy_sprites.push_back(curr_enemy_sprite);
+    }
 
-    sword1_texture.loadFromFile("sword1.png");
-    potion1_texture.loadFromFile("potion1.png");
-
-    curr_item_sprite.setTexture(sword1_texture); // id 0
-    item_sprites.push_back(curr_item_sprite);
-    curr_item_sprite.setTexture(potion1_texture); // id 1
-    item_sprites.push_back(curr_item_sprite);
-
+    std::vector<std::string> item_path = {"sword1.png", "sword2.png",
+                                          "sword3.png", "sword4.png",
+                                          "potion1.png", "potion2.png",
+                                          "potion3.png", "potion4.png"};
+    items_texture_arr.resize(item_path.size());
+    for (int i = 0; i < item_path.size(); i++)
+    {
+        items_texture_arr[i].loadFromFile(item_path[i]);
+        curr_item_sprite.setTexture(items_texture_arr[i]);
+        item_sprites.push_back(curr_item_sprite);
+    }
     curr_item_sprite.setScale(0.6, 0.6);
-    curr_item_sprite.setTexture(sword1_texture);
-    item_ground_sprites.push_back(curr_item_sprite);
-    curr_item_sprite.setTexture(potion1_texture);
-    item_ground_sprites.push_back(curr_item_sprite);
+    for (int i = 0; i < item_path.size(); i++)
+    {
+        curr_item_sprite.setTexture(items_texture_arr[i]);
+        item_ground_sprites.push_back(curr_item_sprite);
+    }
 }
 
 void GameRes::animateSprites(Clock &anim_clock)
@@ -39,12 +53,14 @@ void GameRes::animateSprites(Clock &anim_clock)
         if (is_1st_texture)
         {
             player_texture.loadFromImage(player2_img);
-            enemy_texture.loadFromImage(enemy2_img);
+            for (int i = 0; i < enemy_image_arr.size(); i += 2)
+                enemy_texture_arr[i / 2].loadFromImage(enemy_image_arr[i + 1]);
         }
         else
         {
             player_texture.loadFromImage(player1_img);
-            enemy_texture.loadFromImage(enemy1_img);
+            for (int i = 1; i < enemy_image_arr.size(); i += 2)
+                enemy_texture_arr[i / 2].loadFromImage(enemy_image_arr[i - 1]);
         }
         is_1st_texture = !is_1st_texture;
         anim_clock.restart();

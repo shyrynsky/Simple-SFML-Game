@@ -69,7 +69,8 @@ void drawEntity(sf::RenderWindow &window, Entity &entity, sf::Sprite &sprite, sf
             break;
         }
 
-    sprite.setPosition(draw_x + 5, draw_y + 20);
+    sf::Vector2u curr_size = sprite.getTexture()->getSize();
+    sprite.setPosition(draw_x + (CELL_SIZE - curr_size.x) / 2, draw_y + 20);
     window.draw(sprite);
 
     RectangleShape health_bar(Vector2f(CELL_SIZE * 0.8, CELL_SIZE * 0.1));

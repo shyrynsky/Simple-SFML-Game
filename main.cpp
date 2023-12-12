@@ -35,7 +35,7 @@ int main()
     std::list<GroundItem> ground_item_list;
     GroundItem ground_item1(4, 4, item_set[0]);
     ground_item_list.push_back(ground_item1);
-    GroundItem ground_item2(4, 5, item_set[1]);
+    GroundItem ground_item2(4, 5, item_set[ITEM_SET_SIZE - 2]);
     ground_item_list.push_back(ground_item2);
 
     // Enemy enemy(4, 4, 30, 10, 0);
