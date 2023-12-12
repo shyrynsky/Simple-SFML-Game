@@ -26,7 +26,7 @@ struct Enemy_Info
     int damage;
 };
 
-#define ITEM_SET_SIZE 15
+#define ITEM_SET_SIZE 18
 #define ENEMY_SET_SIZE 4
 
 extern Item item_set[ITEM_SET_SIZE];         // TODO заполнить

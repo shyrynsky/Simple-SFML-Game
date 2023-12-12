@@ -1,5 +1,6 @@
 #pragma once
 #include <stdlib.h>
+#include <vector>
 
 #define ROOM_SIZE 9
 #define MAP_SIZE 7
@@ -24,6 +25,7 @@ struct Room
     CellMtrx cell_mtrx;
     bool is_discovered;
     bool is_room;
+    bool is_boss_room;
 };
 
 typedef Room RoomsMtrx[MAP_SIZE][MAP_SIZE];
@@ -44,6 +46,7 @@ public:
     int getActiveRoomX();
     int getActiveRoomY();
     bool getIsRoomDiscovered();
+    bool getIsBossRoom();
     void setIsRoomDiscovered(bool is_discovered);
 
     CellMtrx cell_mtrx;

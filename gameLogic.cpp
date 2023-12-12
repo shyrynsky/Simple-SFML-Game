@@ -103,6 +103,22 @@ void Player::takeItems(std::list<GroundItem> &ground_item_list)
     }
 }
 
+void getRandEmptyCell(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Entity &player, int &x, int &y)
+{
+    bool is_found = false;
+    while (!is_found)
+    {
+        x = rand() % (ROOM_SIZE - 2) + 1;
+        y = rand() % (ROOM_SIZE - 2) + 1;
+        if (cell_mtrx[y][x] == ctCell &&
+            Entity::isEnemy(enemy_list, x, y) == enemy_list.end() &&
+            (player.getX() != x || player.getY() != y))
+        {
+            is_found = true;
+        }
+    }
+}
+
 bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list)
 {
     int next_x = rooms.getActiveRoomX();
@@ -159,10 +175,26 @@ bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &e
         ground_item_list.clear();
         if (!rooms.getIsRoomDiscovered())
         {
-            Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, *this);
-            GroundItem::SpawnGroundItemList(rooms.cell_mtrx, enemy_list, *this, ground_item_list);
-            rooms.closeRoom();
-            rooms.setIsRoomDiscovered(true);
+            if (rooms.getIsBossRoom())
+            {
+                int new_x, new_y;
+                getRandEmptyCell(rooms.cell_mtrx, enemy_list, *this, new_x, new_y);
+                Enemy boss(new_x, new_y, 100, 20, 3);
+                enemy_list.push_back(boss);
+                for (int i = 0; i < 3; i++)
+                {
+                    getRandEmptyCell(rooms.cell_mtrx, enemy_list, *this, new_x, new_y);
+                    Enemy enemy(new_x, new_y, 20, 20, 2);
+                    enemy_list.push_back(enemy);
+                }
+            }
+            else
+            {
+                Enemy::SpawnEnemyList(rooms.cell_mtrx, enemy_list, *this);
+                GroundItem::SpawnGroundItemList(rooms.cell_mtrx, enemy_list, *this, ground_item_list);
+                rooms.closeRoom();
+                rooms.setIsRoomDiscovered(true);
+            }
         }
         return true;
     }
@@ -217,7 +249,14 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
                 takeItems(ground_item_list);
                 enemy_list.erase(enemy_iter);
                 if (enemy_list.size() == 0)
+                {
                     rooms.openRoom();
+                    if (rooms.getIsBossRoom())
+                    {
+                        exit(EXIT_SUCCESS);
+                        // TODO победил!!!
+                    }
+                }
             }
             last_atack_dir = direction;
             return true;
@@ -407,22 +446,6 @@ void Enemy::moveEnemyList(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Enti
     for (Enemy &enemy : enemy_list)
     {
         enemy.move(cell_mtrx, player, enemy_list);
-    }
-}
-
-void getRandEmptyCell(CellMtrx cell_mtrx, std::list<Enemy> &enemy_list, Entity &player, int &x, int &y)
-{
-    bool is_found = false;
-    while (!is_found)
-    {
-        x = rand() % (ROOM_SIZE - 2) + 1;
-        y = rand() % (ROOM_SIZE - 2) + 1;
-        if (cell_mtrx[y][x] == ctCell &&
-            Entity::isEnemy(enemy_list, x, y) == enemy_list.end() &&
-            (player.getX() != x || player.getY() != y))
-        {
-            is_found = true;
-        }
     }
 }
 

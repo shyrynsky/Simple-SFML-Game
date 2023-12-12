@@ -13,7 +13,8 @@ GameRes::GameRes()
 
     std::vector<std::string> enemy_path = {"enemy1.png", "enemy2.png",
                                            "enemy3.png", "enemy4.png",
-                                           "enemy5.png", "enemy6.png"};
+                                           "enemy5.png", "enemy6.png",
+                                           "boss1.png", "boss2.png"};
     enemy_image_arr.resize(enemy_path.size());
     for (int i = 0; i < enemy_path.size(); i++)
     {

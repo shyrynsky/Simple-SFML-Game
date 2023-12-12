@@ -19,6 +19,11 @@ bool Rooms::getIsRoomDiscovered()
 {
     return rooms_mtrx[active_room_y][active_room_x].is_discovered;
 }
+
+bool Rooms::getIsBossRoom()
+{
+    return rooms_mtrx[active_room_y][active_room_x].is_boss_room;
+}
 void Rooms::setIsRoomDiscovered(bool is_discovered)
 {
     rooms_mtrx[active_room_y][active_room_x].is_discovered = is_discovered;
@@ -139,6 +144,7 @@ void Rooms::generateMap()
         {
             rooms_mtrx[i][j].is_room = false;
             rooms_mtrx[i][j].is_discovered = false;
+            rooms_mtrx[i][j].is_boss_room = false;
         }
     }
     int i = 0;
@@ -147,6 +153,7 @@ void Rooms::generateMap()
         _generateMap(active_room_x, active_room_y);
         i++;
     }
+    std::vector<std::pair<int, int>> poss_boss_room;
 
     for (int i = 0; i < MAP_SIZE; i++)
     {
@@ -156,10 +163,16 @@ void Rooms::generateMap()
             {
                 generateEmptyRoom(j, i);
                 if (active_room_x != j || active_room_y != i)
+                {
                     useTemplates(j, i);
+                    if (isOneNeighbor(j, i))
+                        poss_boss_room.push_back({j, i});
+                }
             }
         }
     }
+    int n = rand() % poss_boss_room.size();
+    rooms_mtrx[poss_boss_room[n].second][poss_boss_room[n].first].is_boss_room = true;
 }
 
 void Rooms::closeRoom()
