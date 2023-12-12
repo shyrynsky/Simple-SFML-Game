@@ -193,6 +193,21 @@ bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &e
                     Enemy enemy(new_x, new_y, 20, 20, 2);
                     enemy_list.push_back(enemy);
                 }
+                rooms.setIsRoomDiscovered(true);
+            }
+            else if (rooms.getIsTreasure())
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    std::pair<int, int> new_coords[3] = {{-1, -1}, {-2, -2}, {-3, -3}};
+                    do
+                        getRandEmptyCell(rooms.cell_mtrx, enemy_list, *this, new_coords[i].first, new_coords[i].second);
+                    while (new_coords[0] == new_coords[1] || new_coords[2] == new_coords[1] || new_coords[2] == new_coords[0]);
+                    int item_numb = rand() % ITEM_SET_SIZE;
+                    GroundItem ground_item(new_coords[i].first, new_coords[i].second, item_set[item_numb]);
+                    ground_item_list.push_back(ground_item);
+                }
+                rooms.setIsRoomDiscovered(true);
             }
             else
             {

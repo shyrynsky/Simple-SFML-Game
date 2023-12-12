@@ -24,6 +24,7 @@ struct Room
     bool is_discovered;
     bool is_room;
     bool is_boss_room;
+    bool is_treasure;
 };
 
 typedef Room RoomsMtrx[MAP_SIZE][MAP_SIZE];
@@ -45,6 +46,7 @@ public:
     int getActiveRoomY();
     bool getIsRoomDiscovered();
     bool getIsBossRoom();
+    bool getIsTreasure();
     void setIsRoomDiscovered(bool is_discovered);
 
     CellMtrx cell_mtrx;
