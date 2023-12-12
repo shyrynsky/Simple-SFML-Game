@@ -65,6 +65,7 @@ class Player : public Entity
 private:
     Item items[INVENTORY_SIZE];
     int active_item;
+    int boss_stage = 1;
 
     auto isGroundItem(std::list<GroundItem> &ground_item_list, int a_x, int a_y);
 
@@ -77,7 +78,8 @@ public:
     void changeActiveItem(int number);
     void takeItems(std::list<GroundItem> &ground_item_list, std::string &mes);
     bool moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list);
-    bool move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list, std::list<GroundItem> &ground_item_list, std::string &mes);
+    bool move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_list,
+              std::list<GroundItem> &ground_item_list, std::string &mes);
 };
 
 class Enemy : public Entity

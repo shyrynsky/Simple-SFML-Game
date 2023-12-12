@@ -247,7 +247,23 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
         {
             int enemy_health = enemy_iter->getHealth();
             if (enemy_health > damage)
+            {
                 enemy_iter->setHealth(enemy_health - damage);
+                if (rooms.getIsBossRoom() && enemy_iter->getMaxHealth() == 100)
+                {
+                    if (enemy_iter->getHealth() <= 100 - 34 * boss_stage)
+                    {
+                        boss_stage++;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            int new_x, new_y;
+                            getRandEmptyCell(rooms.cell_mtrx, enemy_list, *this, new_x, new_y);
+                            Enemy enemy(new_x, new_y, 20, 20, 2);
+                            enemy_list.push_back(enemy);
+                        }
+                    }
+                }
+            }
             else
             {
                 x = next_x;
