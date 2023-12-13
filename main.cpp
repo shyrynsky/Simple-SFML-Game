@@ -9,89 +9,88 @@ using namespace sf;
 
 void handleMenuFrame(Event &event, MenuHandler &handler, RenderWindow &window, GameRes &r /*, Player &const player, list<Booster> &const boosters, list<Bullet> &bullets, list<Enemy> &const enemies, Background &const background*/)
 {
-    // r.resetSong(); // reset current song
+    // r.resetSong();
     window.clear(Color(145, 142, 138));
-    // background.draw(window);     // draw the background on the screen
-    if (window.pollEvent(event)) // if some event happened
+    if (window.pollEvent(event))
     {
-        switch (event.type) // handle the event
+        switch (event.type)
         {
         case Event::Closed:
-            window.close(); // close the window
+            window.close();
             break;
         case Event::MouseButtonReleased:
-            if (event.mouseButton.button == Mouse::Left) // if user has released left mouse button
-                handler.selectAction(window);            // handle user action
+            if (event.mouseButton.button == Mouse::Left)
+                handler.selectAction(window);
             break;
         }
     }
-    handler.update(window); // update the menu handler
-    window.display();       // display drawn frame
-    if (!handler.active())  // if user has either returned to menu or pressed the start button
+    handler.update(window);
+    window.display();
+    if (!handler.active())
     {
-        r.setSFXStatus(handler.getChangeableParameterValue("sound"), handler.getChangeableParameterValue("music")); // update sound and music settings
-        // restartGame(window, boosters, player, bullets, enemies);                                                             // restart the game
+        r.setSFXStatus(handler.getChangeableParameterValue("sound"), handler.getChangeableParameterValue("music"));
+        // restartGame(window, boosters, player, enemies);
     }
 }
 
 void createMainMenu(MenuHandler &handler, const Font &uiFont, const RenderWindow &window)
 {
-    auto &mainMenu = handler.createMenu(uiFont, "main", "Inoplanetyane", 100);           // create new object in menus list
-    float offset = mainMenu.getTitleRect().width / 2;                                    // set title offset
-    mainMenu.setTitlePos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 4); // place the title on the screen
+    auto &mainMenu = handler.createMenu(uiFont, "main", "Inoplanetyane", 100);
+    float offset = mainMenu.getTitleRect().width / 2;
+    mainMenu.setTitlePos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 4);
 
-    auto &but1 = mainMenu.addButton(uiFont, "Start", 80, true);                      // add new button to the created menu
-    offset = but1.getButtonRect().width / 2;                                         // set button offset
-    but1.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 90); // place the created button on the screen
+    auto &but1 = mainMenu.addButton(uiFont, "Start", 80, true);
+    offset = but1.getButtonRect().width / 2;
+    but1.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 90);
 
-    auto &but2 = mainMenu.addButton(uiFont, "Settings", 80, false, false, "settings"); // add new button to the created menu
-    offset = but2.getButtonRect().width / 2;                                           // set button offset
-    but2.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 180);  // place the created button on the screen
+    auto &but2 = mainMenu.addButton(uiFont, "Settings", 80, false, false, "settings");
+    offset = but2.getButtonRect().width / 2;
+    but2.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 180);
 
-    auto &but3 = mainMenu.addButton(uiFont, "Exit", 80, false, true);                 // add new button to the created menu
-    offset = but3.getButtonRect().width / 2;                                          // set button offset
-    but3.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 270); // place the created button on the screen
+    auto &but3 = mainMenu.addButton(uiFont, "Exit", 80, false, true);
+    offset = but3.getButtonRect().width / 2;
+    but3.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 270);
 }
 
 void createSettingsMenu(MenuHandler &handler, Font &uiFont, RenderWindow &window)
 {
-    auto &settingsMenu = handler.createMenu(uiFont, "settings", "", 80); // create new object in menus list
+    auto &settingsMenu = handler.createMenu(uiFont, "settings", "", 80);
 
-    auto &but1 = settingsMenu.addButton(uiFont, "Sound", 80, false, false, "", "sound"); // add new button to the created menu
-    float offset = but1.getButtonRect().width / 2;                                       // set button offset
-    but1.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 90);     // place the created button on the screen
+    auto &but1 = settingsMenu.addButton(uiFont, "Sound", 80, false, false, "", "sound");
+    float offset = but1.getButtonRect().width / 2;
+    but1.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 90);
 
-    auto &but2 = settingsMenu.addButton(uiFont, "Music", 80, false, false, "", "music"); // add new button to the created menu
-    offset = but2.getButtonRect().width / 2;                                             // set button offset
-    but2.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 180);    // place the created button on the screen
+    auto &but2 = settingsMenu.addButton(uiFont, "Music", 80, false, false, "", "music");
+    offset = but2.getButtonRect().width / 2;
+    but2.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 180);
 
-    auto &but3 = settingsMenu.addButton(uiFont, "Back", 80, false, false, "main");    // add new button to the created menu
-    offset = but3.getButtonRect().width / 2;                                          // set button offset
-    but3.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 270); // place the created button on the screen
+    auto &but3 = settingsMenu.addButton(uiFont, "Back", 80, false, false, "main");
+    offset = but3.getButtonRect().width / 2;
+    but3.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 270);
 }
 
 void createGameOverMenu(MenuHandler &handler, Font &uiFont, RenderWindow &window)
 {
-    auto &gameOverMenu = handler.createMenu(uiFont, "gameover", "", 100); // create new object in menus list
+    auto &gameOverMenu = handler.createMenu(uiFont, "gameover", "", 100);
 
-    // auto &but1 = gameOverMenu.addButton(uiFont, "Restart", 80, true);                // add new button to the created menu
-    // float offset = but1.getButtonRect().width / 2;                                   // set button offset
-    // but1.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 90); // place the created button on the screen
+    // auto &but1 = gameOverMenu.addButton(uiFont, "Restart", 80, true);
+    // float offset = but1.getButtonRect().width / 2;
+    // but1.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 90);
 
-    // auto &but2 = gameOverMenu.addButton(uiFont, "Main Menu", 80, false, false, "main"); // add new button to the created menu
-    // offset = but2.getButtonRect().width / 2;                                            // set button offset
-    // but2.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 180);   // place the created button on the screen
+    // auto &but2 = gameOverMenu.addButton(uiFont, "Main Menu", 80, false, false, "main");
+    // offset = but2.getButtonRect().width / 2;
+    // but2.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 180);
 
-    auto &but3 = gameOverMenu.addButton(uiFont, "Exit", 80, false, true);             // add new button to the created menu
-    float offset = but3.getButtonRect().width / 2;                                    // set button offset
-    but3.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 270); // add new button to the created menu
+    auto &but3 = gameOverMenu.addButton(uiFont, "Exit", 80, false, true);
+    float offset = but3.getButtonRect().width / 2;
+    but3.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 270);
 }
 
 void addMenus(MenuHandler &handler, Font &uiFont, RenderWindow &window)
 {
-    createMainMenu(handler, uiFont, window);     // create main menu in menu handler
-    createSettingsMenu(handler, uiFont, window); // create settings menu in menu handler
-    createGameOverMenu(handler, uiFont, window); // create gameover menu in manu handler
+    createMainMenu(handler, uiFont, window);
+    createSettingsMenu(handler, uiFont, window);
+    createGameOverMenu(handler, uiFont, window);
 }
 
 void processAfterMove(Player &player, std::list<Enemy> &enemy_list, Rooms rooms, sf::Clock &fight_clock, GameRes &r)
@@ -144,11 +143,9 @@ int main()
     while (window.isOpen())
     {
 
-        //------------------------------------------------------------------------------
-
-        if (handler.active()) // if menu is active
+        if (handler.active())
         {
-            handleMenuFrame(event, handler, window, r); // handle user actions in menu
+            handleMenuFrame(event, handler, window, r);
         }
         else if (!is_game_over)
         {
@@ -156,9 +153,7 @@ int main()
                 r.updateSong(0);
             else
                 r.updateSong(1);
-            //------------------------------------------------------------------------------
 
-            // sf::Vector2i mousePos = sf::Mouse::getPosition(window);
             while (window.pollEvent(event))
             {
 
@@ -167,8 +162,6 @@ int main()
                 case sf::Event::Closed:
                     window.close();
                     break;
-                // case sf::Event::MouseButtonPressed:
-                //     break;
                 case sf::Event::KeyPressed:
                     switch (event.key.code)
                     {
@@ -213,11 +206,11 @@ int main()
         }
         else
         {
-            handler.setMenuActive("gameover"); // select gameover menu
+            handler.setMenuActive("gameover");
             std::string title_string = is_won ? "You won!!!" : "You lose(((";
-            handler.getCurrentMenu()->title.setString(title_string);                                              // set string (total score)
-            float offset = handler.getCurrentMenu()->getTitleRect().width / 2;                                    // centering the string
-            handler.getCurrentMenu()->setTitlePos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 4); // set string position on the screen
+            handler.getCurrentMenu()->title.setString(title_string);
+            float offset = handler.getCurrentMenu()->getTitleRect().width / 2;
+            handler.getCurrentMenu()->setTitlePos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 4);
         }
     }
 

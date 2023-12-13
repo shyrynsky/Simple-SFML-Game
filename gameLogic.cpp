@@ -107,6 +107,8 @@ void Player::takeItems(std::list<GroundItem> &ground_item_list, std::string &mes
         items[active_item - 1] = ground_item_iter->item;
         if (ground_item_iter->item.type == Item::tWeapon)
             changeActiveItem(active_item);
+        if (ground_item_iter->item.type == Item::tPotion)
+            damage = 1;
         mes = ground_item_iter->item.name;
         ground_item_list.erase(ground_item_iter);
     }
