@@ -1,7 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
 #include <string>
+// #include <list>
+// #include <assert.h>
 
 using namespace sf;
 
@@ -15,6 +18,12 @@ private:
     std::vector<sf::Texture> enemy_texture_arr;
     std::vector<sf::Texture> items_texture_arr;
 
+    SoundBuffer hitBuff;
+    Sound hitSound;
+    std::string songs[2];
+    Music currSong;
+    bool onMusic, onSound;
+
 public:
     Font font;
     sf::Sprite player_spite;
@@ -24,4 +33,8 @@ public:
 
     GameRes();
     void animateSprites(Clock &anim_clock);
+    void playHit();
+    void updateSong(const int &);
+    void setSFXStatus(const bool &, const bool &);
+    void resetSong();
 };

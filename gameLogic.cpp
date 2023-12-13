@@ -1,5 +1,8 @@
 #include "gameLogic.hpp"
 
+bool is_game_over = false;
+bool is_won;
+
 Entity::Entity(int a_x, int a_y, int a_max_helth)
 {
     x = a_x;
@@ -290,8 +293,9 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
                     rooms.openRoom();
                     if (rooms.getIsBossRoom())
                     {
-                        exit(EXIT_SUCCESS);
-                        // TODO победил!!!
+                        // exit(EXIT_SUCCESS);
+                        is_game_over = true;
+                        is_won = true;
                     }
                 }
             }
@@ -455,8 +459,9 @@ void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_lis
             player.setHealth(player_health - damage);
         else
         {
-            // TODO проиграл!!
-            exit(EXIT_SUCCESS);
+            is_game_over = true;
+            is_won = false;
+            // exit(EXIT_SUCCESS);
         }
         Direction direction = dirUnknown;
         if (next_x > x)

@@ -6,6 +6,9 @@
 
 #define INVENTORY_SIZE 6
 
+extern bool is_game_over;
+extern bool is_won;
+
 enum Direction
 {
     dirUp,

@@ -45,6 +45,13 @@ GameRes::GameRes()
         curr_item_sprite.setTexture(items_texture_arr[i]);
         item_ground_sprites.push_back(curr_item_sprite);
     }
+
+    hitBuff.loadFromFile("hit.wav");
+    hitSound.setBuffer(hitBuff);
+    songs[0] = "music1.mp3";
+    songs[1] = "music2.mp3";
+    // for (int i = 0; i < 2; i++)
+    //     songs[i] = "music" + std::to_string(i + 1) + ".mp3";
 }
 
 void GameRes::animateSprites(Clock &anim_clock)
@@ -66,4 +73,43 @@ void GameRes::animateSprites(Clock &anim_clock)
         is_1st_texture = !is_1st_texture;
         anim_clock.restart();
     }
+}
+
+void GameRes::resetSong() // this method stops the current song
+{
+    currSong.stop();
+}
+
+void GameRes::updateSong(const int &sPos) // this method updates song
+{
+    static int pred_song = -1;
+    if (onMusic)
+    {                                                                          // if user turned the music on
+        if (currSong.getStatus() == SoundSource::Stopped || sPos != pred_song) // if current song is stopped
+        {
+            pred_song = sPos;
+            currSong.openFromFile(songs[sPos]); // open song file from directory
+            currSong.play();                    // play this file
+        }
+    }
+    // else
+    // {
+    //     if (pred_song != -1)
+    //     {
+    //         currSong.stop();
+    //         pred_song = -1;
+    //     }
+    // }
+}
+
+void GameRes::playHit() // this method plays hit sound
+{
+    if (onSound)
+        hitSound.play();
+}
+
+void GameRes::setSFXStatus(const bool &sound, const bool &music) // this method sets music and sound status (on/off)
+{
+    onSound = sound;
+    onMusic = music;
 }
