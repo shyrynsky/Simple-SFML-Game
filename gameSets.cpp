@@ -18,13 +18,13 @@ Item item_set[ITEM_SET_SIZE] = {
     {4, "a small health potion", Item::tPotion, 25},
     {4, "a small health potion", Item::tPotion, 25},
 
-    {5, "health potion", Item::tPotion, 50},
-    {5, "health potion", Item::tPotion, 50},
-    {5, "health potion", Item::tPotion, 50},
+    {5, "a health potion", Item::tPotion, 50},
+    {5, "a health potion", Item::tPotion, 50},
+    {5, "a health potion", Item::tPotion, 50},
 
     {6, "a large health potion", Item::tPotion, 100},
     {6, "a large health potion", Item::tPotion, 100},
-    {7, "a special health potion", Item::tPotion, -100}};
+    {7, "a funky health poion", Item::tPotion, -100}};
 
 Enemy_Info enemy_set[ENEMY_SET_SIZE] = {
     {0, 50, 5},

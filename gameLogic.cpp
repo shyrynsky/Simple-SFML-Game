@@ -104,13 +104,17 @@ void Player::takeItems(std::list<GroundItem> &ground_item_list, std::string &mes
     auto ground_item_iter = isGroundItem(ground_item_list, x, y);
     if (ground_item_iter != ground_item_list.end())
     {
+        Item temp_item = items[active_item - 1];
         items[active_item - 1] = ground_item_iter->item;
         if (ground_item_iter->item.type == Item::tWeapon)
             changeActiveItem(active_item);
         if (ground_item_iter->item.type == Item::tPotion)
             damage = 1;
         mes = ground_item_iter->item.name;
-        ground_item_list.erase(ground_item_iter);
+        if (temp_item.type != Item::tUndef)
+            ground_item_iter->item = temp_item;
+        else
+            ground_item_list.erase(ground_item_iter);
     }
 }
 
