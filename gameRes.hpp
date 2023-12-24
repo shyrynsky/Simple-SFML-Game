@@ -3,8 +3,6 @@
 #include <SFML/Audio.hpp>
 #include <vector>
 #include <string>
-// #include <list>
-// #include <assert.h>
 
 using namespace sf;
 

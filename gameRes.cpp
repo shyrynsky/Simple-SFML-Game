@@ -50,8 +50,6 @@ GameRes::GameRes()
     hitSound.setBuffer(hitBuff);
     songs[0] = "music1.mp3";
     songs[1] = "music2.mp3";
-    // for (int i = 0; i < 2; i++)
-    //     songs[i] = "music" + std::to_string(i + 1) + ".mp3";
 }
 
 void GameRes::animateSprites(Clock &anim_clock)
@@ -92,14 +90,6 @@ void GameRes::updateSong(const int &sPos) // this method updates song
             currSong.play();                    // play this file
         }
     }
-    // else
-    // {
-    //     if (pred_song != -1)
-    //     {
-    //         currSong.stop();
-    //         pred_song = -1;
-    //     }
-    // }
 }
 
 void GameRes::playHit() // this method plays hit sound

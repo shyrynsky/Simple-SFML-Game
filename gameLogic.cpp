@@ -192,6 +192,7 @@ bool Player::moveNextRoom(Rooms &rooms, Direction direction, std::list<Enemy> &e
         {
             if (rooms.getIsBossRoom())
             {
+                rooms.closeRoom();
                 int new_x, new_y;
                 getRandEmptyCell(rooms.cell_mtrx, enemy_list, *this, new_x, new_y);
                 Enemy boss(new_x, new_y, 100, 20, 3);
@@ -299,7 +300,6 @@ bool Player::move(Rooms &rooms, Direction direction, std::list<Enemy> &enemy_lis
                     rooms.openRoom();
                     if (rooms.getIsBossRoom())
                     {
-                        // exit(EXIT_SUCCESS);
                         is_game_over = true;
                         is_won = true;
                     }
@@ -397,7 +397,7 @@ bool Enemy::Wave(SearchMatrix path_matrix, int a_x, int a_y, int wave_stage)
     return result;
 }
 
-void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_list) // потестить бы
+void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_list)
 {
     int player_x = player.getX();
     int player_y = player.getY();
@@ -467,7 +467,6 @@ void Enemy::move(CellMtrx cell_mtrx, Entity &player, std::list<Enemy> &enemy_lis
         {
             is_game_over = true;
             is_won = false;
-            // exit(EXIT_SUCCESS);
         }
         Direction direction = dirUnknown;
         if (next_x > x)

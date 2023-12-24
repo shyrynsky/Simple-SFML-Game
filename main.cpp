@@ -9,7 +9,6 @@ using namespace sf;
 
 void handleMenuFrame(Event &event, MenuHandler &handler, RenderWindow &window, GameRes &r /*, Player &const player, list<Booster> &const boosters, list<Bullet> &bullets, list<Enemy> &const enemies, Background &const background*/)
 {
-    // r.resetSong();
     window.clear(Color(145, 142, 138));
     if (window.pollEvent(event))
     {
@@ -29,13 +28,12 @@ void handleMenuFrame(Event &event, MenuHandler &handler, RenderWindow &window, G
     if (!handler.active())
     {
         r.setSFXStatus(handler.getChangeableParameterValue("sound"), handler.getChangeableParameterValue("music"));
-        // restartGame(window, boosters, player, enemies);
     }
 }
 
 void createMainMenu(MenuHandler &handler, const Font &uiFont, const RenderWindow &window)
 {
-    auto &mainMenu = handler.createMenu(uiFont, "main", "Inoplanetyane", 100);
+    auto &mainMenu = handler.createMenu(uiFont, "main", "TheRogueLikeGame", 100);
     float offset = mainMenu.getTitleRect().width / 2;
     mainMenu.setTitlePos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 4);
 
@@ -72,14 +70,6 @@ void createSettingsMenu(MenuHandler &handler, Font &uiFont, RenderWindow &window
 void createGameOverMenu(MenuHandler &handler, Font &uiFont, RenderWindow &window)
 {
     auto &gameOverMenu = handler.createMenu(uiFont, "gameover", "", 100);
-
-    // auto &but1 = gameOverMenu.addButton(uiFont, "Restart", 80, true);
-    // float offset = but1.getButtonRect().width / 2;
-    // but1.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 90);
-
-    // auto &but2 = gameOverMenu.addButton(uiFont, "Main Menu", 80, false, false, "main");
-    // offset = but2.getButtonRect().width / 2;
-    // but2.setPos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 3 + 180);
 
     auto &but3 = gameOverMenu.addButton(uiFont, "Exit", 80, false, true);
     float offset = but3.getButtonRect().width / 2;
@@ -118,14 +108,11 @@ int main()
     srand((unsigned)time(NULL));
 
     GameRes r;
-    //------------------------------------------------------------------------------
 
-    MenuHandler handler;                           // create an instance of menu handler class
-    handler.addChangeableParameter("sound", true); // add variable parameter to menu handler instance
+    MenuHandler handler;
+    handler.addChangeableParameter("sound", true);
     handler.addChangeableParameter("music", true);
-    addMenus(handler, r.font, window); // create menus
-
-    //------------------------------------------------------------------------------
+    addMenus(handler, r.font, window);
 
     Rooms rooms;
     std::string mesStr;
@@ -207,7 +194,7 @@ int main()
         else
         {
             handler.setMenuActive("gameover");
-            std::string title_string = is_won ? "You won!!!" : "You lose(((";
+            std::string title_string = is_won ? "You won!!!" : "game over (((";
             handler.getCurrentMenu()->title.setString(title_string);
             float offset = handler.getCurrentMenu()->getTitleRect().width / 2;
             handler.getCurrentMenu()->setTitlePos(window.getSize().x / 2 - offset, 100 + window.getSize().y / 4);
